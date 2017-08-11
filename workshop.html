@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="client-nojs">
+<head>
+<meta charset="UTF-8"/>
+<title>Processing lidar and UAV point clouds in GRASS GIS (workshop at FOSS4G Boston 2017) - GRASS-Wiki</title>
+<script>document.documentElement.className = document.documentElement.className.replace( /(^|\s)client-nojs(\s|$)/, "$1client-js$2" );</script>
+<script>(window.RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":false,"wgNamespaceNumber":0,"wgPageName":"Processing_lidar_and_UAV_point_clouds_in_GRASS_GIS_(workshop_at_FOSS4G_Boston_2017)","wgTitle":"Processing lidar and UAV point clouds in GRASS GIS (workshop at FOSS4G Boston 2017)","wgCurRevisionId":24707,"wgRevisionId":24707,"wgArticleId":4332,"wgIsArticle":true,"wgIsRedirect":false,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":["Tutorial","Workshops","2017","Lidar","Terrain","Vegetation"],"wgBreakFrames":false,"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgMonthNamesShort":["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"wgRelevantPageName":"Processing_lidar_and_UAV_point_clouds_in_GRASS_GIS_(workshop_at_FOSS4G_Boston_2017)","wgRelevantArticleId":4332,"wgRequestId":"e4e0319760d8202731fc4a25","wgIsProbablyEditable":false,"wgRestrictionEdit":[],"wgRestrictionMove":[],"wgWikiEditorEnabledModules":{"toolbar":true,"dialogs":true,"preview":true,"publish":true}});mw.loader.implement("user.options",function($,jQuery,require,module){mw.user.options.set({"variant":"en"});});mw.loader.implement("user.tokens",function ( $, jQuery, require, module ) {
+mw.user.tokens.set({"editToken":"+\\","patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});/*@nomin*/;
+
+});mw.loader.load(["mediawiki.page.startup","skins.vector.js"]);});</script>
+<link rel="stylesheet" href="/w/load.php?debug=false&amp;lang=en&amp;modules=ext.pygments%7Cmediawiki.legacy.commonPrint%2Cshared%7Cmediawiki.page.gallery.styles%7Cmediawiki.sectionAnchor%7Cmediawiki.skinning.interface%7Cskins.vector.styles&amp;only=styles&amp;skin=vector"/>
+<meta name="ResourceLoaderDynamicStyles" content=""/>
+<script async="" src="/w/load.php?debug=false&amp;lang=en&amp;modules=startup&amp;only=scripts&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.27.1"/>
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/w/opensearch_desc.php" title="GRASS-Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="https://grasswiki.osgeo.org/w/api.php?action=rsd"/>
+<link rel="copyright" href="http://www.gnu.org/copyleft/fdl.html"/>
+<link rel="alternate" type="application/atom+xml" title="GRASS-Wiki Atom feed" href="/w/index.php?title=Special:RecentChanges&amp;feed=atom"/>
+</head>
+<body class="mediawiki ltr sitedir-ltr ns-0 ns-subject page-Processing_lidar_and_UAV_point_clouds_in_GRASS_GIS_workshop_at_FOSS4G_Boston_2017 rootpage-Processing_lidar_and_UAV_point_clouds_in_GRASS_GIS_workshop_at_FOSS4G_Boston_2017 skin-vector action-view">
+		<div id="mw-page-base" class="noprint"></div>
+		<div id="mw-head-base" class="noprint"></div>
+		<div id="content" class="mw-body" role="main">
+			<a id="top"></a>
+
+						<div class="mw-indicators">
+</div>
+			<h1 id="firstHeading" class="firstHeading" lang="en">Processing lidar and UAV point clouds in GRASS GIS (workshop at FOSS4G Boston 2017)</h1>
+									<div id="bodyContent" class="mw-body-content">
+									<div id="siteSub">From GRASS-Wiki</div>
+								<div id="contentSub"></div>
+												<div id="jump-to-nav" class="mw-jump">
+					Jump to:					<a href="#mw-head">navigation</a>, 					<a href="#p-search">search</a>
+				</div>
+				<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="floatright"><a href="/wiki/File:Foss4g_boston_2017_logo.png" class="image"><img alt="Foss4g boston 2017 logo.png" src="/w/images/Foss4g_boston_2017_logo.png" width="408" height="167" /></a></div>
+<div class="floatright"><a href="/wiki/File:Grassgis_logo_colorlogo_text_whitebg.png" class="image"><img alt="Grassgis logo colorlogo text whitebg.png" src="/w/images/thumb/Grassgis_logo_colorlogo_text_whitebg.png/400px-Grassgis_logo_colorlogo_text_whitebg.png" width="400" height="514" srcset="/w/images/Grassgis_logo_colorlogo_text_whitebg.png 1.5x, /w/images/Grassgis_logo_colorlogo_text_whitebg.png 2x" /></a></div>
+<p>Description: GRASS GIS offers, besides other things, numerous analytical tools for point clouds, terrain, and remote sensing. In this hands-on workshop we will explore the tools in GRASS GIS for processing point clouds obtained by lidar or through processing of UAV imagery. We will start with a brief and focused introduction into GRASS GIS graphical user interface (GUI) and we will continue with short introduction to GRASS GIS Python interface. Participants will then decide if they will use GUI, command line, Python, or online Jupyter Notebook for the rest of the workshop. We will explore the properties of the point cloud, interpolate surfaces, and perform advanced terrain analyses to detect landforms and artifacts. We will go through several terrain 2D and 3D visualization techniques to get more information out of the data and finish with vegetation analysis.
+</p><p>Requirements: This workshop is accessible to beginners, but some basic knowledge of lidar processing or GIS is helpful for a smooth experience.
+</p><p>Authors: <a href="/wiki/User:Wenzeslaus" title="User:Wenzeslaus">Vaclav Petras</a>, <a href="/wiki/User:Annakrat" title="User:Annakrat">Anna Petrasova</a>, and Helena Mitasova from North Carolina State University
+</p><p>Contributors: Robert S. Dzur and Doug Newcomb
+</p>
+<div id="toc" class="toc"><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Preparation"><span class="tocnumber">1</span> <span class="toctext">Preparation</span></a>
+<ul>
+<li class="toclevel-2 tocsection-2"><a href="#Software"><span class="tocnumber">1.1</span> <span class="toctext">Software</span></a></li>
+<li class="toclevel-2 tocsection-3"><a href="#Addons"><span class="tocnumber">1.2</span> <span class="toctext">Addons</span></a></li>
+<li class="toclevel-2 tocsection-4"><a href="#Data"><span class="tocnumber">1.3</span> <span class="toctext">Data</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-5"><a href="#Basic_introduction_to_graphical_user_interface"><span class="tocnumber">2</span> <span class="toctext">Basic introduction to graphical user interface</span></a>
+<ul>
+<li class="toclevel-2 tocsection-6"><a href="#GRASS_GIS_Spatial_Database"><span class="tocnumber">2.1</span> <span class="toctext">GRASS GIS Spatial Database</span></a></li>
+<li class="toclevel-2 tocsection-7"><a href="#Importing_data"><span class="tocnumber">2.2</span> <span class="toctext">Importing data</span></a></li>
+<li class="toclevel-2 tocsection-8"><a href="#Computational_region"><span class="tocnumber">2.3</span> <span class="toctext">Computational region</span></a></li>
+<li class="toclevel-2 tocsection-9"><a href="#Modules"><span class="tocnumber">2.4</span> <span class="toctext">Modules</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-10"><a href="#Basic_introduction_to_Python_interface"><span class="tocnumber">3</span> <span class="toctext">Basic introduction to Python interface</span></a></li>
+<li class="toclevel-1 tocsection-11"><a href="#Decide_if_to_use_GUI.2C_command_line.2C_Python.2C_or_online_Jupyter_Notebook"><span class="tocnumber">4</span> <span class="toctext">Decide if to use GUI, command line, Python, or online Jupyter Notebook</span></a></li>
+<li class="toclevel-1 tocsection-12"><a href="#Binning_of_the_point_cloud"><span class="tocnumber">5</span> <span class="toctext">Binning of the point cloud</span></a></li>
+<li class="toclevel-1 tocsection-13"><a href="#Interpolation"><span class="tocnumber">6</span> <span class="toctext">Interpolation</span></a></li>
+<li class="toclevel-1 tocsection-14"><a href="#Terrain_analysis"><span class="tocnumber">7</span> <span class="toctext">Terrain analysis</span></a></li>
+<li class="toclevel-1 tocsection-15"><a href="#Vegetation_analysis"><span class="tocnumber">8</span> <span class="toctext">Vegetation analysis</span></a></li>
+<li class="toclevel-1 tocsection-16"><a href="#Bonus_tasks"><span class="tocnumber">9</span> <span class="toctext">Bonus tasks</span></a>
+<ul>
+<li class="toclevel-2 tocsection-17"><a href="#3D_visualization_of_rasters"><span class="tocnumber">9.1</span> <span class="toctext">3D visualization of rasters</span></a></li>
+<li class="toclevel-2 tocsection-18"><a href="#Analytical_visualization_of_rasters_in_3D"><span class="tocnumber">9.2</span> <span class="toctext">Analytical visualization of rasters in 3D</span></a></li>
+<li class="toclevel-2 tocsection-19"><a href="#Classify_ground_and_non-ground_points"><span class="tocnumber">9.3</span> <span class="toctext">Classify ground and non-ground points</span></a></li>
+<li class="toclevel-2 tocsection-20"><a href="#3D_visualization_of_point_clouds"><span class="tocnumber">9.4</span> <span class="toctext">3D visualization of point clouds</span></a></li>
+<li class="toclevel-2 tocsection-21"><a href="#Alternative_DSM_creation"><span class="tocnumber">9.5</span> <span class="toctext">Alternative DSM creation</span></a></li>
+<li class="toclevel-2 tocsection-22"><a href="#Explore_layers_of_vegetation_in_a_3D_raster"><span class="tocnumber">9.6</span> <span class="toctext">Explore layers of vegetation in a 3D raster</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-23"><a href="#Optimizations.2C_troubleshooting_and_limitations"><span class="tocnumber">10</span> <span class="toctext">Optimizations, troubleshooting and limitations</span></a></li>
+<li class="toclevel-1 tocsection-24"><a href="#Bleeding_edge"><span class="tocnumber">11</span> <span class="toctext">Bleeding edge</span></a></li>
+<li class="toclevel-1 tocsection-25"><a href="#See_also"><span class="tocnumber">12</span> <span class="toctext">See also</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Preparation">Preparation</span></h2>
+<h3><span class="mw-headline" id="Software">Software</span></h3>
+<p>GRASS GIS 7.2 compiled with libLAS is needed (e.g. <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.in.lidar.html">r.in.lidar</a></span> should work).
+</p><p><b>OSGeo-Live</b>
+</p><p>All needed software is included in <a rel="nofollow" class="external text" href="http://live.osgeo.org/">OSGeo-Live</a>.
+</p><p><b> Ubuntu </b>
+</p><p>Install GRASS GIS from packages:
+</p>
+<pre>
+sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
+sudo apt-get update
+sudo apt-get install grass
+</pre>
+<p><b> Linux </b>
+</p><p>For other Linux distributions other then Ubuntu, please try to find GRASS GIS in their package managers.
+</p><p><b>MS Windows</b>
+</p><p>Download the standalone GRASS GIS binaries from <a rel="nofollow" class="external text" href="https://grass.osgeo.org/">grass.osgeo.org</a>.
+</p><p><b>Mac OS</b>
+</p><p>Install GRASS GIS using <a rel="nofollow" class="external text" href="https://brew.sh/">Homebrew</a> <a rel="nofollow" class="external text" href="https://github.com/OSGeo/homebrew-osgeo4mac">osgeo4mac</a>:
+</p>
+<pre>
+brew tap osgeo/osgeo4mac
+brew install numpy
+brew install liblas --build-from-source
+brew install grass7 --with-liblas
+</pre>
+<p>If you have these already installed, you need to use <code>reinstall</code> instead of <code>install</code>.
+</p><p>Note that on Mac OS in some versions the <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.in.lidar.html">r.in.lidar</a></span> module is not accessible, so you need to check this and use <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.in.ascii.html">r.in.ascii</a></span> in combination with libLAS or PDAL command line tools to achieve the same or, preferably, use OSGeo-Live.
+</p><p>Note also that there is currently no recent version of installation on Mac OS where 3D view is accessible.
+</p>
+<h3><span class="mw-headline" id="Addons">Addons</span></h3>
+<p>You will need to install the following GRASS GIS Addons. This can be done through GUI, but for simplicity copy and paste and execute the following lines one by one in the command line:
+</p>
+<pre>g.extension r.geomorphon
+g.extension r.skyview
+g.extension r.local.relief
+g.extension r.shaded.pca
+g.extension r.area
+g.extension r.terrain.texture
+g.extension r.fill.gaps
+</pre>
+<p>For bonus tasks:
+</p>
+<pre>g.extension v.lidar.mcc
+</pre>
+<h3><span class="mw-headline" id="Data">Data</span></h3>
+<p>We will need the two following ZIP files, downloaded and extracted:
+</p>
+<ul><li> <a rel="nofollow" class="external text" href="http://fatra.cnr.ncsu.edu/foss4g2017/nc_orthophoto_1m_spm.zip">orthophoto</a></li>
+<li> <a rel="nofollow" class="external text" href="http://fatra.cnr.ncsu.edu/foss4g2017/nc_tile_0793_016_spm.zip">point cloud</a></li></ul>
+<p>Later, for bonus task, download also this (much larger) file:  
+</p>
+<ul><li> <a rel="nofollow" class="external text" href="http://fatra.cnr.ncsu.edu/foss4g2017/nc_uav_points_spm.zip">UAV point cloud</a></li></ul>
+<h2><span class="mw-headline" id="Basic_introduction_to_graphical_user_interface">Basic introduction to graphical user interface</span></h2>
+<h3><span class="mw-headline" id="GRASS_GIS_Spatial_Database">GRASS GIS Spatial Database</span></h3>
+<p>Here we provide an overview of <a rel="nofollow" class="external text" href="https://grass.osgeo.org">GRASS GIS</a>. For this exercise it's not necessary to have a full understanding of how to use GRASS GIS. However, you will need to know how to place your data in the correct GRASS GIS database directory, as well as some basic GRASS functionality.
+</p><p>GRASS uses specific database terminology and structure (<a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/grass_database.html">GRASS GIS Spatial Database</a>) that are important to understand for working in GRASS GIS efficiently. You will create a new <i>location</i> and import the required data into that location. In the following we review important terminology and give step by step directions on how to download and place your data in the correct place.
+</p>
+<ul><li> A <b>GRASS GIS Spatial Database</b> (<i>GRASS database</i>) consists of directory with specific Locations (projects) where data (data layers/maps) are stored.</li>
+<li> <b>Location</b> is a directory with data related to one geographic location or a project. All data within one Location has the same coordinate reference system.</li>
+<li> <b>Mapset</b> is a collection of maps within Location, containing data related to a specific task, user or a smaller project.</li></ul>
+<p>Start GRASS GIS, a start-up screen should appear.
+Unless you already have a directory called <tt>grassdata</tt> in your <tt>Documents</tt> directory (on MS Windows)
+or in your home directory (on Linux), create one. You can use the Browse button and the dialog in the GRASS GIS start up screen to do that.
+</p><p>We will create a new <i>location</i> for our project with CRS (coordinate reference system) NC State Plane Meters with EPSG code 3358.
+Open Location Wizard with button <i>New</i> in the left part of the welcome screen. Select a name for the new location, select EPSG method and code 3358.
+When the wizard is finished, the new location will be listed on the start-up screen. Select the new location and mapset PERMANENT and press <i>Start GRASS session</i>.
+</p>
+<center><ul class="gallery mw-gallery-traditional" style="max-width: 1329px;_width: 1329px;">
+		<li class="gallerybox" style="width: 435px"><div style="width: 435px">
+			<div class="thumb" style="width: 430px;"><div style="margin:27.5px auto;"><a href="/wiki/File:Grass_database.png" class="image"><img alt="" src="/w/images/thumb/Grass_database.png/400px-Grass_database.png" width="400" height="245" srcset="/w/images/thumb/Grass_database.png/600px-Grass_database.png 1.5x, /w/images/Grass_database.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>GRASS GIS Spatial Database structure
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 435px"><div style="width: 435px">
+			<div class="thumb" style="width: 430px;"><div style="margin:15px auto;"><a href="/wiki/File:GRASS_startup_ncspm.png" class="image"><img alt="" src="/w/images/thumb/GRASS_startup_ncspm.png/271px-GRASS_startup_ncspm.png" width="271" height="270" srcset="/w/images/thumb/GRASS_startup_ncspm.png/407px-GRASS_startup_ncspm.png 1.5x, /w/images/thumb/GRASS_startup_ncspm.png/543px-GRASS_startup_ncspm.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>GRASS GIS 7.2 startup dialog
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 435px"><div style="width: 435px">
+			<div class="thumb" style="width: 430px;"><div style="margin:25.5px auto;"><a href="/wiki/File:Location_wizard_define.png" class="image"><img alt="" src="/w/images/thumb/Location_wizard_define.png/400px-Location_wizard_define.png" width="400" height="249" srcset="/w/images/thumb/Location_wizard_define.png/600px-Location_wizard_define.png 1.5x, /w/images/Location_wizard_define.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Start Location Wizard and type the new location's name
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 435px"><div style="width: 435px">
+			<div class="thumb" style="width: 430px;"><div style="margin:25.5px auto;"><a href="/wiki/File:Location_wizard_method_7.2.png" class="image"><img alt="" src="/w/images/thumb/Location_wizard_method_7.2.png/400px-Location_wizard_method_7.2.png" width="400" height="249" srcset="/w/images/thumb/Location_wizard_method_7.2.png/600px-Location_wizard_method_7.2.png 1.5x, /w/images/Location_wizard_method_7.2.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Select method for describing CRS
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 435px"><div style="width: 435px">
+			<div class="thumb" style="width: 430px;"><div style="margin:25.5px auto;"><a href="/wiki/File:Location_wizard_EPSG3358_7.2.png" class="image"><img alt="" src="/w/images/thumb/Location_wizard_EPSG3358_7.2.png/400px-Location_wizard_EPSG3358_7.2.png" width="400" height="249" srcset="/w/images/thumb/Location_wizard_EPSG3358_7.2.png/600px-Location_wizard_EPSG3358_7.2.png 1.5x, /w/images/Location_wizard_EPSG3358_7.2.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Find and select EPSG 3358
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 435px"><div style="width: 435px">
+			<div class="thumb" style="width: 430px;"><div style="margin:25.5px auto;"><a href="/wiki/File:Location_wizard_epsg_datum_transformation.png" class="image"><img alt="" src="/w/images/thumb/Location_wizard_epsg_datum_transformation.png/400px-Location_wizard_epsg_datum_transformation.png" width="400" height="249" srcset="/w/images/thumb/Location_wizard_epsg_datum_transformation.png/600px-Location_wizard_epsg_datum_transformation.png 1.5x, /w/images/Location_wizard_epsg_datum_transformation.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Confirm the use of the default datum transformation
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 435px"><div style="width: 435px">
+			<div class="thumb" style="width: 430px;"><div style="margin:25.5px auto;"><a href="/wiki/File:Location_wizard_summary_7.2.1.png" class="image"><img alt="" src="/w/images/thumb/Location_wizard_summary_7.2.1.png/400px-Location_wizard_summary_7.2.1.png" width="400" height="249" srcset="/w/images/thumb/Location_wizard_summary_7.2.1.png/600px-Location_wizard_summary_7.2.1.png 1.5x, /w/images/Location_wizard_summary_7.2.1.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Review summary page and confirm
+</p>
+			</div>
+		</div></li>
+</ul></center>
+<p>Note that a current working directory is a concept which is separate from the GRASS database, location and mapset discussed above. The current working directory is a directory where any program (no just GRASS GIS) writes and reads files unless a path to the file is provided. The current working directory can be changed from the GUI using <i>Settings → GRASS working environment → Change working directory</i> or from the Console using the <tt>cd</tt> command. This is advantageous when we are using command line and working with the same file again and again. This is often the case when working with lidar data. We can change the directory to the directory with the downloaded LAS file. IN case we don't change the directory, we need to provide full path to the file. Note that command line and GUI have their own settings of current working directory, so it needs to be changed separately for each of them.
+</p>
+<h3><span class="mw-headline" id="Importing_data">Importing data</span></h3>
+<p>In this step we import the provided data into GRASS GIS. In menu <i>File - Import raster data</i> select <i>Common formats import</i> and in the dialog browse to find the orthophoto file, change the name to <tt>ortho.tif</tt>, and click button <i>Import</i>. All the imported layers should be added to GUI automatically, if not, add them manually. Point clouds will be imported later in a different way as part of the analysis.
+</p>
+<center><ul class="gallery mw-gallery-traditional" style="max-width: 1329px;_width: 1329px;">
+		<li class="gallerybox" style="width: 435px"><div style="width: 435px">
+			<div class="thumb" style="width: 430px;"><div style="margin:15px auto;"><a href="/wiki/File:Import_raster_7.2.1.png" class="image"><img alt="" src="/w/images/thumb/Import_raster_7.2.1.png/344px-Import_raster_7.2.1.png" width="344" height="300" srcset="/w/images/thumb/Import_raster_7.2.1.png/516px-Import_raster_7.2.1.png 1.5x, /w/images/Import_raster_7.2.1.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Import raster data: select the orthophoto file and change the name to ortho
+</p>
+			</div>
+		</div></li>
+</ul></center>
+<p>The equivalent command is:
+</p>
+<pre>r.import input=nc_orthophoto_1m_spm.tif output=ortho
+</pre>
+<h3><span class="mw-headline" id="Computational_region">Computational region</span></h3>
+<p>Before we use a module to compute a new raster map, we must properly set the computational region. All raster computations will be performed in the specified extent and with the given resolution.
+</p><p>Computational region is an important raster concept in GRASS GIS. In GRASS a computational region can be set, subsetting larger extent data for quicker testing of analysis or analysis of specific regions based on administrative units. We provide a few points to keep in mind when using the computational region function:
+</p>
+<ul><li> defined by region extent and raster resolution</li>
+<li> applies to all raster operations</li>
+<li> persists between GRASS sessions, can be different for different mapsets</li>
+<li> advantages: keeps your results consistent, avoid clipping, for computationally demanding tasks set region to smaller extent, check that your result is good and then set the computational region to the entire study area and rerun analysis</li>
+<li> run <code>g.region -p</code> or in menu <i>Settings</i> - <i>Region</i> - <i>Display region</i> to see current region settings</li></ul>
+<center><ul class="gallery mw-gallery-traditional" style="max-width: 1269px;_width: 1269px;">
+		<li class="gallerybox" style="width: 415px"><div style="width: 415px">
+			<div class="thumb" style="width: 410px;"><div style="margin:15px auto;"><a href="/wiki/File:Computational_region_two_rasters.png" class="image"><img alt="" src="/w/images/thumb/Computational_region_two_rasters.png/247px-Computational_region_two_rasters.png" width="247" height="190" srcset="/w/images/thumb/Computational_region_two_rasters.png/371px-Computational_region_two_rasters.png 1.5x, /w/images/thumb/Computational_region_two_rasters.png/495px-Computational_region_two_rasters.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Computational region concept: A raster with large extent (blue) is displayed as well as another raster with smaller extent (green). The computational region (red) is now set to match the smaller raster, so all the computations are limited to the smaller raster extent even if the input is the larger raster. (Not shown on the image: Also the resolution, not only the extent, matches the resolution of the smaller raster.)
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 415px"><div style="width: 415px">
+			<div class="thumb" style="width: 410px;"><div style="margin:26.5px auto;"><a href="/wiki/File:WxGUI_set_region.png" class="image"><img alt="" src="/w/images/thumb/WxGUI_set_region.png/380px-WxGUI_set_region.png" width="380" height="167" srcset="/w/images/thumb/WxGUI_set_region.png/570px-WxGUI_set_region.png 1.5x, /w/images/thumb/WxGUI_set_region.png/760px-WxGUI_set_region.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Simple ways to set computational region from GUI: On the left, set region to match raster map. On the right, select the highlighted option and then set region by drawing rectangle.
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 415px"><div style="width: 415px">
+			<div class="thumb" style="width: 410px;"><div style="margin:32px auto;"><a href="/wiki/File:Wxgui_computational_region_set_from_raster.png" class="image"><img alt="" src="/w/images/thumb/Wxgui_computational_region_set_from_raster.png/380px-Wxgui_computational_region_set_from_raster.png" width="380" height="156" srcset="/w/images/Wxgui_computational_region_set_from_raster.png 1.5x, /w/images/Wxgui_computational_region_set_from_raster.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Set computational region (extent and resolution) to match a raster (<i>Layers</i> tab in the <i>Layer Manager</i>)
+</p>
+			</div>
+		</div></li>
+</ul></center>
+<p>The numeric values of computational region can be checked using:
+</p>
+<pre>g.region -p
+</pre>
+<p>After executing the command you will get something like this:
+</p>
+<pre>north:      220750
+south:      220000
+west:       638300
+east:       639000
+nsres:      1
+ewres:      1
+rows:       750
+cols:       700
+cells:      525000
+</pre>
+<p>Computational region can be set using a raster map:
+</p>
+<pre>g.region raster=ortho -p
+</pre>
+<p>Resolution can be set separately using the <code>res</code> parameter of the <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/g.region.html">g.region</a></span> module. The units are the units of the current location, in our case meters. This can be done in the <i>Resolution</i> tab of the <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/g.region.html">g.region</a></span> dialog or in the command line in the following way (using also the <code>-a</code> flag to print the new values):
+</p>
+<pre>g.region res=3 -p
+</pre>
+<p>The new resolution may be slightly modified in this case to fit into the extent which we are not changing. However, often we want the resolution to be the exact value we provide and we are fine with a slight modification of the extent. That's what <code>-a</code> flag is for. On the other hand, if alignment with cells of a specific raster is important, <code>align</code> parameter can be used to request the alignment to that raster (regardless of the the extent).
+</p><p>The following example command will use the extent from the raster named <code>ortho</code>, use resolution <code>5</code> meters, modify the extent to align it to this 5 meter resolution, and print the values of this new computational region settings:
+</p>
+<pre>g.region raster=ortho res=5 -a -p
+</pre>
+<h3><span class="mw-headline" id="Modules">Modules</span></h3>
+<p>GRASS GIS functionality is available through <i>modules</i> (tools, functions, commands). Modules respect the following naming conventions:
+</p>
+<center>
+<table class="wikitable">
+
+<tr>
+<th> Prefix </th>
+<th> Function </th>
+<th> Example
+</th></tr>
+<tr>
+<td> r. </td>
+<td> raster processing </td>
+<td> <i><span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.mapcalc.html">r.mapcalc</a></span></i>: map algebra
+</td></tr>
+<tr>
+<td> v. </td>
+<td> vector processing  </td>
+<td> <i><span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.surf.rst.html">v.surf.rst</a></span></i>: surface interpolation
+</td></tr>
+<tr>
+<td> i. </td>
+<td> imagery processing  </td>
+<td> <i><span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/i.segment.html">i.segment</a></span></i>: image segmentation
+</td></tr>
+<tr>
+<td> r3. </td>
+<td> 3D raster processing  </td>
+<td> <i><span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r3.stats.html">r3.stats</a></span></i>: 3D raster statistics
+</td></tr>
+<tr>
+<td> t. </td>
+<td> temporal data processing  </td>
+<td> <i><span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/t.rast.aggregate.html">t.rast.aggregate</a></span></i>: temporal aggregation
+</td></tr>
+<tr>
+<td> g. </td>
+<td> general data management </td>
+<td> <i><span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/g.remove.html">g.remove</a></span></i>: removes maps
+</td></tr>
+<tr>
+<td> d. </td>
+<td> display </td>
+<td><i><span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/d.rast.html">d.rast</a></span></i>: display raster map
+</td></tr></table></center>
+<p>These are the main groups of modules. There is few more for specific purposes. Note also that some modules have multiple dots in their names. This often suggests further grouping. For example, modules staring with <i>v.net.</i> deal with vector network analysis. The name of the module helps to understand its function, for example <i>v.in.lidar</i> starts with <i>v</i> so it deals with vector maps, the name follows with <i>in</i> which indicates that the module is for importing the data into GRASS GIS Spatial Database and finally <i>lidar</i> indicates that it deals with lidar point clouds.
+</p>
+<center><ul class="gallery mw-gallery-traditional" style="max-width: 1372px;_width: 1372px;">
+		<li class="gallerybox" style="width: 335px"><div style="width: 335px">
+			<div class="thumb" style="width: 330px;"><div style="margin:20.5px auto;"><a href="/wiki/File:R_in_lidar_dialog.png" class="image"><img alt="" src="/w/images/thumb/R_in_lidar_dialog.png/300px-R_in_lidar_dialog.png" width="300" height="179" srcset="/w/images/thumb/R_in_lidar_dialog.png/450px-R_in_lidar_dialog.png 1.5x, /w/images/thumb/R_in_lidar_dialog.png/600px-R_in_lidar_dialog.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>r.in.lidar dialog with Output tab active and highlighted module name (blue), options and flags (red) and option values (green)
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 335px"><div style="width: 335px">
+			<div class="thumb" style="width: 330px;"><div style="margin:83.5px auto;"><a href="/wiki/File:Example_r.in.lidar_command_in_Bash.png" class="image"><img alt="" src="/w/images/thumb/Example_r.in.lidar_command_in_Bash.png/300px-Example_r.in.lidar_command_in_Bash.png" width="300" height="53" srcset="/w/images/thumb/Example_r.in.lidar_command_in_Bash.png/450px-Example_r.in.lidar_command_in_Bash.png 1.5x, /w/images/thumb/Example_r.in.lidar_command_in_Bash.png/600px-Example_r.in.lidar_command_in_Bash.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Example r.in.lidar command in Bash with highlighted module name (blue), options and flags (red) and option values (green)
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 335px"><div style="width: 335px">
+			<div class="thumb" style="width: 330px;"><div style="margin:58.5px auto;"><a href="/wiki/File:Example_r.in.lidar_command_in_Python.png" class="image"><img alt="" src="/w/images/thumb/Example_r.in.lidar_command_in_Python.png/300px-Example_r.in.lidar_command_in_Python.png" width="300" height="103" srcset="/w/images/thumb/Example_r.in.lidar_command_in_Python.png/450px-Example_r.in.lidar_command_in_Python.png 1.5x, /w/images/thumb/Example_r.in.lidar_command_in_Python.png/600px-Example_r.in.lidar_command_in_Python.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Example r.in.lidar command in Python with highlighted module name (blue), options and flags (red) and option values (green) and import (grey)
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 335px"><div style="width: 335px">
+			<div class="thumb" style="width: 330px;"><div style="margin:36.5px auto;"><a href="/wiki/File:Graphical_Modeler_with_r.in.lidar_and_terrain_analysis.png" class="image"><img alt="" src="/w/images/thumb/Graphical_Modeler_with_r.in.lidar_and_terrain_analysis.png/300px-Graphical_Modeler_with_r.in.lidar_and_terrain_analysis.png" width="300" height="147" srcset="/w/images/thumb/Graphical_Modeler_with_r.in.lidar_and_terrain_analysis.png/450px-Graphical_Modeler_with_r.in.lidar_and_terrain_analysis.png 1.5x, /w/images/thumb/Graphical_Modeler_with_r.in.lidar_and_terrain_analysis.png/600px-Graphical_Modeler_with_r.in.lidar_and_terrain_analysis.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>GRASS GIS <i>Graphical Modeler</i>
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 335px"><div style="width: 335px">
+			<div class="thumb" style="width: 330px;"><div style="margin:32.5px auto;"><a href="/wiki/File:WxGUI_console_completion.png" class="image"><img alt="" src="/w/images/thumb/WxGUI_console_completion.png/300px-WxGUI_console_completion.png" width="300" height="155" srcset="/w/images/WxGUI_console_completion.png 1.5x, /w/images/WxGUI_console_completion.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p><i>Console</i> tab in the <i>Layer Manager</i> for running commands or opening module dialogs
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 335px"><div style="width: 335px">
+			<div class="thumb" style="width: 330px;"><div style="margin:43.5px auto;"><a href="/wiki/File:Grass_gis_cli_ubuntu_purple_r.in.lidar.png" class="image"><img alt="" src="/w/images/thumb/Grass_gis_cli_ubuntu_purple_r.in.lidar.png/300px-Grass_gis_cli_ubuntu_purple_r.in.lidar.png" width="300" height="133" srcset="/w/images/thumb/Grass_gis_cli_ubuntu_purple_r.in.lidar.png/450px-Grass_gis_cli_ubuntu_purple_r.in.lidar.png 1.5x, /w/images/thumb/Grass_gis_cli_ubuntu_purple_r.in.lidar.png/600px-Grass_gis_cli_ubuntu_purple_r.in.lidar.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Command line interface (CLI) in a system terminal
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 335px"><div style="width: 335px">
+			<div class="thumb" style="width: 330px;"><div style="margin:19.5px auto;"><a href="/wiki/File:Wxgui_module_parameters_r_neighbors.png" class="image"><img alt="" src="/w/images/thumb/Wxgui_module_parameters_r_neighbors.png/300px-Wxgui_module_parameters_r_neighbors.png" width="300" height="181" srcset="/w/images/thumb/Wxgui_module_parameters_r_neighbors.png/450px-Wxgui_module_parameters_r_neighbors.png 1.5x, /w/images/Wxgui_module_parameters_r_neighbors.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Layout of a module dialog
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 335px"><div style="width: 335px">
+			<div class="thumb" style="width: 330px;"><div style="margin:32px auto;"><a href="/wiki/File:WxGUI_module_search.png" class="image"><img alt="" src="/w/images/thumb/WxGUI_module_search.png/300px-WxGUI_module_search.png" width="300" height="156" srcset="/w/images/WxGUI_module_search.png 1.5x, /w/images/WxGUI_module_search.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Search for a module in the <i>Modules</i> tab
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 335px"><div style="width: 335px">
+			<div class="thumb" style="width: 330px;"><div style="margin:26.5px auto;"><a href="/wiki/File:G_search_modules_with_c_flag.png" class="image"><img alt="" src="/w/images/thumb/G_search_modules_with_c_flag.png/300px-G_search_modules_with_c_flag.png" width="300" height="167" srcset="/w/images/thumb/G_search_modules_with_c_flag.png/450px-G_search_modules_with_c_flag.png 1.5x, /w/images/thumb/G_search_modules_with_c_flag.png/600px-G_search_modules_with_c_flag.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Search for a module using advanced search with <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/g.search.modules.html">g.search.modules</a></span>
+</p>
+			</div>
+		</div></li>
+</ul></center>
+<p>One of the advantages of GRASS GIS is the diversity and number of modules that let you analyze all manners of spatial and temporal data. GRASS GIS has over <a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/full_index.html">500 different modules</a> in the core distribution and over <a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/addons/">300 addon modules</a> that can be used to prepare and analyze data. The following table lists some of the main modules for point cloud analysis. 
+</p>
+<center>
+<table class="wikitable">
+
+<tr>
+<th> Module </th>
+<th> Function </th>
+<th> Alternatives
+</th></tr>
+<tr>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.in.lidar.html">r.in.lidar</a></span> </td>
+<td> binning into 2D raster, statistics </td>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.in.xyz.html">r.in.xyz</a></span>, <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.vect.stats.html">v.vect.stats</a></span>, <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass7/manuals/addons/r.vect.stats.html">r.vect.stats</a></span>
+</td></tr>
+<tr>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.in.lidar.html">v.in.lidar</a></span> </td>
+<td> import, decimation </td>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.in.ascii.html">v.in.ascii</a></span>, <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.in.ogr.html">v.in.ogr</a></span>, <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.import.html">v.import</a></span>
+</td></tr>
+<tr>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r3.in.lidar.html">r3.in.lidar</a></span> </td>
+<td> binning into 3D raster </td>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r3.in.xyz.html">r3.in.xyz</a></span>, <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.in.lidar.html">r.in.lidar</a></span>
+</td></tr>
+<tr>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.out.lidar.html">v.out.lidar</a></span> </td>
+<td> export of point cloud </td>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.out.ascii.html">v.out.ascii</a></span>, <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.out.xyz.html">r.out.xyz</a></span>
+</td></tr>
+<tr>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.surf.rst.html">v.surf.rst</a></span> </td>
+<td> interpolation surfaces from points </td>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.surf.bspline.html">v.surf.bspline</a></span>, <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.surf.idw.html">v.surf.idw</a></span>
+</td></tr>
+<tr>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.lidar.edgedetection.html">v.lidar.edgedetection</a></span> </td>
+<td> ground and object (edge) detection </td>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass7/manuals/addons/v.lidar.mcc.html">v.lidar.mcc</a></span>, <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.outlier.html">v.outlier</a></span>
+</td></tr>
+<tr>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.decimate.html">v.decimate</a></span> </td>
+<td> decimate (thin) a point cloud </td>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.in.lidar.html">v.in.lidar</a></span>, <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.in.lidar.html">r.in.lidar</a></span>
+</td></tr>
+<tr>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.slope.aspect.html">r.slope.aspect</a></span> </td>
+<td> topographic parameters </td>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.surf.rst.html">v.surf.rst</a></span>, <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.param.scale.html">r.param.scale</a></span>
+</td></tr>
+<tr>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.relief.html">r.relief</a></span> </td>
+<td> shaded relief computation </td>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass7/manuals/addons/r.skyview.html">r.skyview</a></span>, <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass7/manuals/addons/r.local.relief.html">r.local.relief</a></span>
+</td></tr>
+<tr>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.colors.html">r.colors</a></span> </td>
+<td> raster color table management </td>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass7/manuals/addons/r.cpt2grass.html">r.cpt2grass</a></span>, <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass7/manuals/addons/r.colors.matplotlib.html">r.colors.matplotlib</a></span>
+</td></tr>
+<tr>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/g.region.html">g.region</a></span> </td>
+<td> resolution and extent management </td>
+<td> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.in.lidar.html">r.in.lidar</a></span>, GUI
+</td></tr></table></center>
+<p>Modules and their descriptions with examples can be found the documentation. The documentation is included in the local installation and is also available online.
+</p>
+<center><ul class="gallery mw-gallery-traditional" style="max-width: 1372px;_width: 1372px;">
+		<li class="gallerybox" style="width: 335px"><div style="width: 335px">
+			<div class="thumb" style="width: 330px;"><div style="margin:15px auto;"><a href="/wiki/File:Manual_pages_online_keywords_7.2.png" class="image"><img alt="" src="/w/images/thumb/Manual_pages_online_keywords_7.2.png/188px-Manual_pages_online_keywords_7.2.png" width="188" height="190" srcset="/w/images/thumb/Manual_pages_online_keywords_7.2.png/283px-Manual_pages_online_keywords_7.2.png 1.5x, /w/images/thumb/Manual_pages_online_keywords_7.2.png/377px-Manual_pages_online_keywords_7.2.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>List of keywords (tags) in the online documentation
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 335px"><div style="width: 335px">
+			<div class="thumb" style="width: 330px;"><div style="margin:15px auto;"><a href="/wiki/File:R_slope_aspect_3_manual.png" class="image"><img alt="" src="/w/images/thumb/R_slope_aspect_3_manual.png/293px-R_slope_aspect_3_manual.png" width="293" height="190" srcset="/w/images/thumb/R_slope_aspect_3_manual.png/439px-R_slope_aspect_3_manual.png 1.5x, /w/images/R_slope_aspect_3_manual.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Manual page for a module is available also from the module dialog
+</p>
+			</div>
+		</div></li>
+</ul></center>
+<h2><span class="mw-headline" id="Basic_introduction_to_Python_interface">Basic introduction to Python interface</span></h2>
+<p>The simplest way to execute the Python code which uses GRASS GIS packages is to use <i>Simple Python Editor</i> integrated in GRASS GIS (accessible from the toolbar or the Python tab in the <i>Layer Manager</i>). Another option is to use your favorite text editor and then run the script in GRASS GIS using the main menu <i>File → Launch script</i>.
+</p>
+<center><ul class="gallery mw-gallery-traditional" style="max-width: 1269px;_width: 1269px;">
+		<li class="gallerybox" style="width: 415px"><div style="width: 415px">
+			<div class="thumb" style="width: 410px;"><div style="margin:15px auto;"><a href="/wiki/File:Simple_python_editor_v_buffer.png" class="image"><img alt="" src="/w/images/thumb/Simple_python_editor_v_buffer.png/321px-Simple_python_editor_v_buffer.png" width="321" height="190" srcset="/w/images/thumb/Simple_python_editor_v_buffer.png/481px-Simple_python_editor_v_buffer.png 1.5x, /w/images/thumb/Simple_python_editor_v_buffer.png/641px-Simple_python_editor_v_buffer.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p><i>Simple Python Editor</i> integrated in GRASS GIS
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 415px"><div style="width: 415px">
+			<div class="thumb" style="width: 410px;"><div style="margin:15px auto;"><a href="/wiki/File:GRASS_GUI_Python_shell.png" class="image"><img alt="" src="/w/images/thumb/GRASS_GUI_Python_shell.png/145px-GRASS_GUI_Python_shell.png" width="145" height="190" srcset="/w/images/thumb/GRASS_GUI_Python_shell.png/218px-GRASS_GUI_Python_shell.png 1.5x, /w/images/thumb/GRASS_GUI_Python_shell.png/291px-GRASS_GUI_Python_shell.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p><i>Python</i> tab with an interactive Python shell
+</p>
+			</div>
+		</div></li>
+</ul></center>
+<p>We will use the <i>Simple Python Editor</i> to run the commands. You can open it from the <i>Python</i> tab.
+When you open Simple Python Editor, you find a short code snippet.
+It starts with importing GRASS GIS Python Scripting Library:
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="kn">import</span> <span class="nn">grass.script</span> <span class="kn">as</span> <span class="nn">gscript</span>
+</pre></div>
+<p>In the main function we call <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/g.region.html">g.region</a></span> to see the current computational region settings:
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="n">gscript</span><span class="o">.</span><span class="n">run_command</span><span class="p">(</span><span class="s1">&#39;g.region&#39;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
+</pre></div>
+<p>Note that the syntax is similar to command line syntax (<code>g.region -p</code>), only the flag is specified in a parameter. Now we can run the script by pressing the Run button in the toolbar. In Layer Manager we get the output of g.region.
+</p><p>In this example, we set the computational extent and resolution to the raster layer <tt>ortho</tt> which would be done using <code>g.region raster=ortho</code> in the command line.
+To use the <code>run_command</code> to set the computational region, replace the previous <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/g.region.html">g.region</a></span> command with the following line:
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="n">gscript</span><span class="o">.</span><span class="n">run_command</span><span class="p">(</span><span class="s1">&#39;g.region&#39;</span><span class="p">,</span> <span class="n">raster</span><span class="o">=</span><span class="s1">&#39;ortho&#39;</span><span class="p">)</span>
+</pre></div>
+<p>The GRASS GIS Python Scripting Library provides functions to call GRASS modules within Python scripts as subprocesses. All functions are in a package called grass and the most common functions are in grass.script package which is often imported <code>import grass.script as gscript</code>. The most often used functions include:
+</p>
+<ul><li> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass71/manuals/libpython/script.html#script.core.run_command">script.core.run_command()</a></span>: used with modules which output raster or vector data and when text output is not expected</li>
+<li> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass71/manuals/libpython/script.html#script.core.read_command">script.core.read_command()</a></span>: used when we are interested in text output which is returned as Python string</li>
+<li> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass71/manuals/libpython/script.html#script.core.parse_command">script.core.parse_command()</a></span>: used with modules producing text output as key=value pair which is automatically parsed into a Python dictionary</li>
+<li> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass71/manuals/libpython/script.html#script.core.write_command">script.core.write_command()</a></span>: for modules expecting text input from either standard input or file</li></ul>
+<p>Here we use <code>parse_command</code> to obtain the statistics as a Python dictionary
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="n">region</span> <span class="o">=</span> <span class="n">gscript</span><span class="o">.</span><span class="n">parse_command</span><span class="p">(</span><span class="s1">&#39;g.region&#39;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;ewres&#39;</span><span class="p">],</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;nsres&#39;</span><span class="p">]</span>
+</pre></div>
+<p>The results printed are the raster resolutions in E-W and N-S directions.
+</p><p>In the above examples, we were calling the <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/g.region.html">g.region</a></span> module. Typically, the scripts (and GRASS GIS modules) don't change the computational region and often they don't need to even read it. The computational region can be defined before running the script so that the script can be used with different computational region settings.
+</p><p>The library also provides several convenient wrapper functions for often called modules, for example <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass71/manuals/libpython/script.html#script.raster.raster_info">script.raster.raster_info()</a></span> (wrapper for <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.info.html">r.info</a></span>), <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass71/manuals/libpython/script.html#script.core.list_grouped">script.core.list_grouped()</a></span> (one of the wrappers for <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/g.list.html">g.list</a></span>), and <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass71/manuals/libpython/script.html#script.core.region">script.core.region()</a></span> (wrapper for <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/g.region.html">g.region</a></span>).
+</p><p>When we want to run the script again, we need to either remove the created data beforehand using <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/g.remove.html">g.remove</a></span> or we need to tell GRASS GIS to overwrite the existing data. This can be done adding <code>overwrite=True</code> as an additional argument to the function call for each module or we can do it globally using <code>os.environ['GRASS_OVERWRITE'] = '1'</code> (requires <code>import os</code>).
+</p><p>Finally, you may have noticed the first line of the script which says <code>#!/usr/bin/env python</code>. This is what Linux, Mac OS, and similar systems use to determine which interpreter to use. If you get something line <code>[Errno 8] Exec format error</code>, this line is probably incorrect or missing.
+</p>
+<h2><span class="mw-headline" id="Decide_if_to_use_GUI.2C_command_line.2C_Python.2C_or_online_Jupyter_Notebook">Decide if to use GUI, command line, Python, or online Jupyter Notebook</span></h2>
+<ul><li> GUI: can be combined anytime with command line</li>
+<li> command line: can be any time combined with the GUI, most of the following instructions will be for command line (but can be easily transfered to GUI or Python), both system command line and Console tab in GUI will work well</li>
+<li> Python: you will need to change the syntax to Python</li>
+<li> Jupyter Notebook online: link will be distributed by the instructor</li>
+<li> Jupyter Notebook locally: this is recommended only if you are using OSGeoLive or if you are on Linux and are familiar with Jupyter</li></ul>
+<h2><span class="mw-headline" id="Binning_of_the_point_cloud">Binning of the point cloud</span></h2>
+<center><ul class="gallery mw-gallery-traditional" style="max-width: 1329px;_width: 1329px;">
+		<li class="gallerybox" style="width: 435px"><div style="width: 435px">
+			<div class="thumb" style="width: 430px;"><div style="margin:76px auto;"><a href="/wiki/File:Binning_and_decimation_workflow_schema_for_point_clouds.png" class="image"><img alt="" src="/w/images/thumb/Binning_and_decimation_workflow_schema_for_point_clouds.png/400px-Binning_and_decimation_workflow_schema_for_point_clouds.png" width="400" height="148" srcset="/w/images/thumb/Binning_and_decimation_workflow_schema_for_point_clouds.png/600px-Binning_and_decimation_workflow_schema_for_point_clouds.png 1.5x, /w/images/thumb/Binning_and_decimation_workflow_schema_for_point_clouds.png/800px-Binning_and_decimation_workflow_schema_for_point_clouds.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Point cloud is either binned into a raster (e.g. <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.in.lidar.html">r.in.lidar</a></span>) and then analyzed as raster or optionally decimated (e.g. using <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.in.lidar.html">v.in.lidar</a></span>), converted to vector (still using <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.in.lidar.html">v.in.lidar</a></span>) and then interpolated (e.g. <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.surf.rst.html">v.surf.rst</a></span>) into raster or analyzed as a vector (e.g. <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.vect.stats.html">v.vect.stats</a></span>). Data are in gray, processes in yellow.
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 435px"><div style="width: 435px">
+			<div class="thumb" style="width: 430px;"><div style="margin:15px auto;"><a href="/wiki/File:Binning_count_explanation.png" class="image"><img alt="" src="/w/images/thumb/Binning_count_explanation.png/225px-Binning_count_explanation.png" width="225" height="270" srcset="/w/images/thumb/Binning_count_explanation.png/338px-Binning_count_explanation.png 1.5x, /w/images/thumb/Binning_count_explanation.png/450px-Binning_count_explanation.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>In basic case, binning of points into a 2D raster consists of counting the number of points falling into each cell. The resulting cell value is then count of points in that cell.
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 435px"><div style="width: 435px">
+			<div class="thumb" style="width: 430px;"><div style="margin:15px auto;"><a href="/wiki/File:Binning_mean_explanation.png" class="image"><img alt="" src="/w/images/thumb/Binning_mean_explanation.png/225px-Binning_mean_explanation.png" width="225" height="270" srcset="/w/images/thumb/Binning_mean_explanation.png/338px-Binning_mean_explanation.png 1.5x, /w/images/thumb/Binning_mean_explanation.png/450px-Binning_mean_explanation.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>In general binning involves also values associated with the points and computes statistics on these values. Here the mean of Z coordinates of all the point in each cell is computed and stored in the raster. The cells without any points are NULL (NoData) shown in white here.
+</p>
+			</div>
+		</div></li>
+</ul></center>
+<p>Fastest way to analyze basic properties of a point cloud is to use binning and create a raster map. We will now use <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.in.lidar.html">r.in.lidar</a></span> to create point count (point density) raster. At this point, we don't know the spatial extent of the point cloud, so we cannot set computation region ahead, but we can tell the <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.in.lidar.html">r.in.lidar</a></span> module to determine the extent first and use it for the output using the <code>-e</code> flag. We are using a coarse resolution to maximize the speed of the process. Additionally, the <code>-r</code> flag sets the computational region to match the output.
+</p>
+<pre>r.in.lidar input=nc_tile_0793_016_spm.las output=count_10 method=n -e -n resolution=10
+</pre>
+<p>Now we can see the distribution pattern, but let's examine also the numbers (in GUI using right click on the layer in <i>Layer Manager</i> and then Metadata or using <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.info.html">r.info</a></span> directly):
+</p>
+<pre>r.info map=count_10
+</pre>
+<p>We can do a quick check of some of the values using query tool in the <i>Map Display</i>.
+Since there is a lot of points per one cell, we can use a finer resolution:
+</p>
+<pre>r.in.lidar input=nc_tile_0793_016_spm.las output=count_1 method=n -e -n resolution=1
+</pre>
+<p>Look at the distribution of the values using a histogram. Histogram is accessible from the context menu of a layer in <i>Layer Manager</i>, from <i>Map Display</i> toolbar <i>Analyze map</i> button or using the <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/d.histogram.html">d.histogram</a></span> module (<code>d.histogram map=count_1</code>).
+</p>
+<center><ul class="gallery mw-gallery-traditional" style="max-width: 1329px;_width: 1329px;">
+		<li class="gallerybox" style="width: 435px"><div style="width: 435px">
+			<div class="thumb" style="width: 430px;"><div style="margin:15px auto;"><a href="/wiki/File:Lidar_point_density_with_coarse_resolution_and_ortho_in_the_background.png" class="image"><img alt="" src="/w/images/thumb/Lidar_point_density_with_coarse_resolution_and_ortho_in_the_background.png/279px-Lidar_point_density_with_coarse_resolution_and_ortho_in_the_background.png" width="279" height="270" srcset="/w/images/thumb/Lidar_point_density_with_coarse_resolution_and_ortho_in_the_background.png/418px-Lidar_point_density_with_coarse_resolution_and_ortho_in_the_background.png 1.5x, /w/images/thumb/Lidar_point_density_with_coarse_resolution_and_ortho_in_the_background.png/557px-Lidar_point_density_with_coarse_resolution_and_ortho_in_the_background.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Lidar point count per cell using <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.in.lidar.html">r.in.lidar</a></span> with 10 m cells (<code>resolution=10</code>) and <code>-e</code> flag
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 435px"><div style="width: 435px">
+			<div class="thumb" style="width: 430px;"><div style="margin:15px auto;"><a href="/wiki/File:GRASS_GIS_Histogramming_Tool_d.histogram_-_count_of_point.png" class="image"><img alt="" src="/w/images/thumb/GRASS_GIS_Histogramming_Tool_d.histogram_-_count_of_point.png/357px-GRASS_GIS_Histogramming_Tool_d.histogram_-_count_of_point.png" width="357" height="270" srcset="/w/images/GRASS_GIS_Histogramming_Tool_d.histogram_-_count_of_point.png 1.5x, /w/images/GRASS_GIS_Histogramming_Tool_d.histogram_-_count_of_point.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>GRASS GIS Histogramming Tool (based on <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/d.histogram.html">d.histogram</a></span>)
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 435px"><div style="width: 435px">
+			<div class="thumb" style="width: 430px;"><div style="margin:27.5px auto;"><a href="/wiki/File:GRASS_GIS_Histogramming_Tool_wxPython_-_count_of_point.png" class="image"><img alt="" src="/w/images/thumb/GRASS_GIS_Histogramming_Tool_wxPython_-_count_of_point.png/400px-GRASS_GIS_Histogramming_Tool_wxPython_-_count_of_point.png" width="400" height="245" srcset="/w/images/thumb/GRASS_GIS_Histogramming_Tool_wxPython_-_count_of_point.png/600px-GRASS_GIS_Histogramming_Tool_wxPython_-_count_of_point.png 1.5x, /w/images/GRASS_GIS_Histogramming_Tool_wxPython_-_count_of_point.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>GRASS GIS Histogramming Tool (based on wxPython)
+</p>
+			</div>
+		</div></li>
+</ul></center>
+<p>Now we have appropriate number of points in most of the cells and there are no density artifacts around the edges, so we can use this raster as the base for extent and resolution we will use from now on.
+</p>
+<pre>g.region raster=count_1 -p
+</pre>
+<p>However, this region has a lot of cells and some of them would be empty, esp. when we start filtering the point cloud. To account for that, we can modify just the resolution of the computational region:
+</p>
+<pre>g.region res=3 -ap
+</pre>
+<p>Use binning to obtain the digital surface model (DSM) (resolution and extent are taken from the computational region):
+</p>
+<pre>r.in.lidar input=nc_tile_0793_016_spm.las output=binned_dsm method=max
+</pre>
+<p>To understand what the map shows, compute statistics using <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.report.html">r.report</a></span> (<i>Report raster statistics</i> in the layer context menu):
+</p>
+<pre>r.report map=binned_dsm units=c
+</pre>
+<p>This shows that there is an outlier (at around 600 m). Change the color table to histogram equalized (<code>-e</code> flag) to see the contrast in the rest of the map (using the <code>viridis</code> color table):
+</p>
+<pre>r.colors map=binned_dsm color=elevation -e
+</pre>
+<p>Let's check the outliers also using minimum (which is  <code>method=min</code>, we already used <code>method=max</code> for DSM):
+</p>
+<pre>r.in.lidar input=nc_tile_0793_016_spm.las output=minimum method=min
+</pre>
+<p>Compare this with range and mean of the values in the ground raster and decide what is the permissible range.
+</p>
+<pre>r.report map=minimum units=c
+</pre>
+<p>Again, to see the data, we can use histogram equalized color table:
+</p>
+<pre>r.colors map=minimum color=elevation -e
+</pre>
+<div class="thumb tright"><div class="thumbinner" style="width:302px;"><a href="/wiki/File:R_in_lidar_explanation_of_zrange_option.png" class="image"><img alt="" src="/w/images/thumb/R_in_lidar_explanation_of_zrange_option.png/300px-R_in_lidar_explanation_of_zrange_option.png" width="300" height="211" class="thumbimage" srcset="/w/images/thumb/R_in_lidar_explanation_of_zrange_option.png/450px-R_in_lidar_explanation_of_zrange_option.png 1.5x, /w/images/R_in_lidar_explanation_of_zrange_option.png 2x" /></a>  <div class="thumbcaption"><div class="magnify"><a href="/wiki/File:R_in_lidar_explanation_of_zrange_option.png" class="internal" title="Enlarge"></a></div>The <code>zrange</code> parameter filters out points which don't fall into the specified range of Z values</div></div></div>
+<p>Now when we know the outliers and the expected range of values (60-200 m seems to be a safe and but broad enough range), use the <code>zrange</code> parameter to filter out any possible outliers (don't be confused with the <code>intensity_range</code> parameter) when computing a new DSM:
+</p>
+<pre>r.in.lidar input=nc_tile_0793_016_spm.las output=binned_dsm_limited method=max zrange=60,200
+</pre>
+<h2><span class="mw-headline" id="Interpolation">Interpolation</span></h2>
+<p>Now we will interpolate a digital surface model (DSM) and for that we can increase resolution to obtain as much detail as possible (we could use 0.5 m, i.e. <code>res=0.5</code>, for high detail or 2 m, i.e. <code>res=2 -a</code>, for speed):
+</p>
+<pre>g.region raster=count_1 -p
+</pre>
+<p>Before interpolating, let's confirm that the spatial distribution of the points allows us to safely interpolate. We need to use the same filters as we will use for the DSM itself:
+</p>
+<pre>r.in.lidar input=nc_tile_0793_016_spm.las output=count_dsm method=n return_filter=first zrange=60,200
+</pre>
+<p>First check the numbers:
+</p>
+<pre>r.report map=count_dsm units=h,c,p
+</pre>
+<p>Then check the spatial distribution. For that we will need to use histogram equalized color table (legend can be limited just to a specific range of values: <code>d.legend raster=count_interpolation range=0,5</code>).
+</p>
+<pre>r.colors map=count_dsm color=viridis -e
+</pre>
+<p>First we import LAS file as vector points, we keep only first return points and limit the import vertically to avoid using outliers found in the previous step. Before running it, uncheck <i>Add created map(s) into layer tree</i> in the <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.in.lidar.html">v.in.lidar</a></span> dialog if you are using GUI.
+</p>
+<pre>v.in.lidar -bt input=nc_tile_0793_016_spm.las output=first_returns return_filter=first zrange=60,200
+</pre>
+<center><ul class="gallery mw-gallery-traditional" style="max-width: 1329px;_width: 1329px;">
+		<li class="gallerybox" style="width: 435px"><div style="width: 435px">
+			<div class="thumb" style="width: 430px;"><div style="margin:15px auto;"><a href="/wiki/File:V.in.lidar_dialog_do_not_add_into_layer_tree.png" class="image"><img alt="" src="/w/images/thumb/V.in.lidar_dialog_do_not_add_into_layer_tree.png/362px-V.in.lidar_dialog_do_not_add_into_layer_tree.png" width="362" height="270" srcset="/w/images/thumb/V.in.lidar_dialog_do_not_add_into_layer_tree.png/543px-V.in.lidar_dialog_do_not_add_into_layer_tree.png 1.5x, /w/images/V.in.lidar_dialog_do_not_add_into_layer_tree.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Unchecked <i>Add created map(s) into layer tree</i> in v.in.lidar
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 435px"><div style="width: 435px">
+			<div class="thumb" style="width: 430px;"><div style="margin:15px auto;"><a href="/wiki/File:Lidar_point_density_with_fine_resolution_showing_swath_overlap.png" class="image"><img alt="" src="/w/images/thumb/Lidar_point_density_with_fine_resolution_showing_swath_overlap.png/342px-Lidar_point_density_with_fine_resolution_showing_swath_overlap.png" width="342" height="270" srcset="/w/images/thumb/Lidar_point_density_with_fine_resolution_showing_swath_overlap.png/514px-Lidar_point_density_with_fine_resolution_showing_swath_overlap.png 1.5x, /w/images/thumb/Lidar_point_density_with_fine_resolution_showing_swath_overlap.png/685px-Lidar_point_density_with_fine_resolution_showing_swath_overlap.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Point count at fine resolution with histogram equalized viridis color table and legend with a limited range
+</p>
+			</div>
+		</div></li>
+</ul></center>
+<p>Then we interpolate:
+</p>
+<pre>v.surf.rst input=first_returns elevation=dsm tension=25 smooth=1 npmin=80
+</pre>
+<p>Now we could visualize the resulting DSM by computing shaded relief with <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.relief.html">r.relief</a></span> or by using 3D view (see the following sections).
+</p>
+<center><ul class="gallery mw-gallery-traditional" style="max-width: 1329px;_width: 1329px;">
+		<li class="gallerybox" style="width: 435px"><div style="width: 435px">
+			<div class="thumb" style="width: 430px;"><div style="margin:15px auto;"><a href="/wiki/File:Map_Display_with_DSM_and_legend_with_histogram.png" class="image"><img alt="" src="/w/images/thumb/Map_Display_with_DSM_and_legend_with_histogram.png/322px-Map_Display_with_DSM_and_legend_with_histogram.png" width="322" height="270" srcset="/w/images/thumb/Map_Display_with_DSM_and_legend_with_histogram.png/484px-Map_Display_with_DSM_and_legend_with_histogram.png 1.5x, /w/images/thumb/Map_Display_with_DSM_and_legend_with_histogram.png/645px-Map_Display_with_DSM_and_legend_with_histogram.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>DSM with legend and histogram.
+</p>
+			</div>
+		</div></li>
+</ul></center>
+<h2><span class="mw-headline" id="Terrain_analysis">Terrain analysis</span></h2>
+<p>Set the computational region based on an existing raster map:
+</p>
+<pre>g.region raster=count_1 -p
+</pre>
+<p>Check if the point density is sufficient (ground is class number 2, resolution and extent are taken from the computational region):
+</p>
+<pre>r.in.lidar input=nc_tile_0793_016_spm.las output=count_ground method=n class_filter=2 zrange=60,200
+</pre>
+<p>Import points (the <tt>-t</tt> flag disables creation of attribute table and the <tt>-b</tt> flag disables building of topology; uncheck <i>Add created map(s) into layer tree</i>):
+</p>
+<pre>v.in.lidar -bt input=nc_tile_0793_016_spm.las output=points_ground class_filter=2 zrange=60,200
+</pre>
+<center><ul class="gallery mw-gallery-traditional" style="max-width: 1329px;_width: 1329px;">
+		<li class="gallerybox" style="width: 435px"><div style="width: 435px">
+			<div class="thumb" style="width: 430px;"><div style="margin:15px auto;"><a href="/wiki/File:Counting_ground_points_per_cell_with_r.in.lidar.png" class="image"><img alt="" src="/w/images/thumb/Counting_ground_points_per_cell_with_r.in.lidar.png/277px-Counting_ground_points_per_cell_with_r.in.lidar.png" width="277" height="270" srcset="/w/images/thumb/Counting_ground_points_per_cell_with_r.in.lidar.png/415px-Counting_ground_points_per_cell_with_r.in.lidar.png 1.5x, /w/images/thumb/Counting_ground_points_per_cell_with_r.in.lidar.png/554px-Counting_ground_points_per_cell_with_r.in.lidar.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p><i>Map Display</i> with legend created using <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/d.legend.html">d.legend</a></span>, <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.in.lidar.html">r.in.lidar</a></span> dialog, ground point density pattern in the background
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 435px"><div style="width: 435px">
+			<div class="thumb" style="width: 430px;"><div style="margin:15px auto;"><a href="/wiki/File:V.in.lidar_dialog_do_not_add_into_layer_tree.png" class="image"><img alt="" src="/w/images/thumb/V.in.lidar_dialog_do_not_add_into_layer_tree.png/362px-V.in.lidar_dialog_do_not_add_into_layer_tree.png" width="362" height="270" srcset="/w/images/thumb/V.in.lidar_dialog_do_not_add_into_layer_tree.png/543px-V.in.lidar_dialog_do_not_add_into_layer_tree.png 1.5x, /w/images/V.in.lidar_dialog_do_not_add_into_layer_tree.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Unchecked <i>Add created map(s) into layer tree</i> in v.in.lidar
+</p>
+			</div>
+		</div></li>
+</ul></center>
+<p>The interpolation will take some time, but we can set the computational region to a smaller area to save some time before we determine what are the best parameters for interpolation. This can be done in the GUI from the <i>Map Display</i> toolbar or here just quickly using the prepared coordinates: 
+</p>
+<pre>g.region n=223751 s=223418 w=639542 e=639899 -p
+</pre>
+<center><ul class="gallery mw-gallery-traditional" style="max-width: 1269px;_width: 1269px;">
+		<li class="gallerybox" style="width: 415px"><div style="width: 415px">
+			<div class="thumb" style="width: 410px;"><div style="margin:26.5px auto;"><a href="/wiki/File:WxGUI_set_region.png" class="image"><img alt="" src="/w/images/thumb/WxGUI_set_region.png/380px-WxGUI_set_region.png" width="380" height="167" srcset="/w/images/thumb/WxGUI_set_region.png/570px-WxGUI_set_region.png 1.5x, /w/images/thumb/WxGUI_set_region.png/760px-WxGUI_set_region.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Simple ways to set computational region extent from GUI. On the left, set region to match raster map. On the right, select the highlighted option and then set region by drawing rectangle. Then zoom to computational region.
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 415px"><div style="width: 415px">
+			<div class="thumb" style="width: 410px;"><div style="margin:15px auto;"><a href="/wiki/File:Show_computational_extent_in_Map_Display.png" class="image"><img alt="" src="/w/images/thumb/Show_computational_extent_in_Map_Display.png/152px-Show_computational_extent_in_Map_Display.png" width="152" height="190" srcset="/w/images/thumb/Show_computational_extent_in_Map_Display.png/228px-Show_computational_extent_in_Map_Display.png 1.5x, /w/images/thumb/Show_computational_extent_in_Map_Display.png/304px-Show_computational_extent_in_Map_Display.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Show the current computational region extent in the <i>Map Display</i>
+</p>
+			</div>
+		</div></li>
+</ul></center>
+<p>Now we interpolate the ground surface using regularized spline with tension (implemented in <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.surf.rst.html">v.surf.rst</a></span>) and at the same time we also derive slope, aspect and curvatures (the following code is one long line):
+</p>
+<pre>v.surf.rst input=points_ground tension=25 smooth=1 npmin=100 elevation=terrain slope=slope aspect=aspect pcurvature=profile_curvature tcurvature=tangential_curvature mcurvatur=mean_curvature
+</pre>
+<p>When we examine the results, especially the curvatures curvatures show a pattern which may be caused by some problems with the point cloud collection. We decrease the tension which will cause the surface to hold less to the points and we increase the smoothing. Since the raster map called range already exists, use the overwrite flag, i.e. <code>--overwrite</code> in the command line or checkbox in GUI to replace the existing raster by the new one. We use the <code>--overwrite</code> flag shortened to just <code>--o</code>.
+</p>
+<pre>v.surf.rst input=points_ground tension=20 smooth=5 npmin=100 elevation=terrain slope=slope aspect=aspect pcurvature=profile_curvature tcurvature=tangential_curvature mcurvatur=mean_curvature --o
+</pre>
+<p>When we are satisfied with the result, we get back to our desired raster extent:
+</p>
+<pre>g.region raster=count_1 -p
+</pre>
+<p>And finally interpolate the ground surface in the full extent:
+</p>
+<pre>v.surf.rst input=points_ground tension=20 smooth=5 npmin=100 elevation=terrain slope=slope aspect=aspect pcurvature=profile_curvature tcurvature=tangential_curvature mcurvatur=mean_curvature --o
+</pre>
+<p>Compute shaded relief:
+</p>
+<pre>r.relief input=terrain output=relief
+</pre>
+<p>Now combine the shaded relief raster and the elevation raster. This can be done in several ways. In GUI by changing opacity of one of them. A better result can be obtained using the <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.shade.html">r.shade</a></span> module which combines the two rasters and creates a new one. Finally, this can be done on the fly without creating any raster using the <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/d.shade.html">d.shade</a></span> module. The module can be used from GUI through toolbar or using the <i>Console</i> tab:
+</p>
+<pre>d.shade shade=relief color=terrain
+</pre>
+<p>Now, instead of using <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.relief.html">r.relief</a></span>, we will use <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass7/manuals/addons/r.skyview.html">r.skyview</a></span>: 
+</p>
+<pre>r.skyview input=terrain output=skyview ndir=8 colorized_output=terrain_skyview
+</pre>
+<p>Combine the terrain and skyview also on the fly:
+</p>
+<pre>d.shade shade=skyview color=terrain
+</pre>
+<p>Analytical visualization based on shaded relief:
+</p>
+<pre>r.shaded.pca input=terrain output=pca_shade
+</pre>
+<p>Local relief model:
+</p>
+<pre>r.local.relief input=terrain output=lrm shaded_output=shaded_lrm
+</pre>
+<p>Pit density:
+</p>
+<pre>r.terrain.texture elevation=terrain thres=0 pitdensity=pit_density
+</pre>
+<p>Finally, we use automatic detection of landforms (using 50 m search window):
+</p>
+<pre>r.geomorphon -m elevation=terrain forms=landforms search=50
+</pre>
+<center><ul class="gallery mw-gallery-traditional" style="max-width: 1269px;_width: 1269px;">
+		<li class="gallerybox" style="width: 415px"><div style="width: 415px">
+			<div class="thumb" style="width: 410px;"><div style="margin:15px auto;"><a href="/wiki/File:Different_terrain_analyses_and_visualizations_in_multiple_Map_Displays.png" class="image"><img alt="" src="/w/images/thumb/Different_terrain_analyses_and_visualizations_in_multiple_Map_Displays.png/338px-Different_terrain_analyses_and_visualizations_in_multiple_Map_Displays.png" width="338" height="190" srcset="/w/images/thumb/Different_terrain_analyses_and_visualizations_in_multiple_Map_Displays.png/507px-Different_terrain_analyses_and_visualizations_in_multiple_Map_Displays.png 1.5x, /w/images/thumb/Different_terrain_analyses_and_visualizations_in_multiple_Map_Displays.png/676px-Different_terrain_analyses_and_visualizations_in_multiple_Map_Displays.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Different terrain analyses and visualizations in multiple <i>Map Displays</i>
+</p>
+			</div>
+		</div></li>
+</ul></center>
+<h2><span class="mw-headline" id="Vegetation_analysis">Vegetation analysis</span></h2>
+<div class="thumb tright"><div class="thumbinner" style="width:302px;"><a href="/wiki/File:R_in_lidar_explanation_of_zrange_option.png" class="image"><img alt="" src="/w/images/thumb/R_in_lidar_explanation_of_zrange_option.png/300px-R_in_lidar_explanation_of_zrange_option.png" width="300" height="211" class="thumbimage" srcset="/w/images/thumb/R_in_lidar_explanation_of_zrange_option.png/450px-R_in_lidar_explanation_of_zrange_option.png 1.5x, /w/images/R_in_lidar_explanation_of_zrange_option.png 2x" /></a>  <div class="thumbcaption"><div class="magnify"><a href="/wiki/File:R_in_lidar_explanation_of_zrange_option.png" class="internal" title="Enlarge"></a></div>The <code>zrange</code> parameter filters out points which don't fall into the specified range of Z values</div></div></div>
+<p>Although for many vegetation-related application, coarser resolution is more appropriate because more points are needed for the statistics, we will use just&#160;: 
+</p>
+<pre>g.region raster=count_1
+</pre>
+<p>We use all the points (not using the classification of the points), but with the Z filter to get the range of heights in each cell:
+</p>
+<pre>r.in.lidar input=nc_tile_0793_016_spm.las output=range method=range zrange=60,200
+</pre>
+<p>We use all the points, but with the Z filter to get the range of heights in each cell:
+</p>
+<pre>r.mapcalc "vegetation_by_range = if(range &gt; 2, 1, null())"
+</pre>
+<p>Or lower res to avoid gaps (and possible smoothing during their filling).
+</p>
+<center><ul class="gallery mw-gallery-traditional" style="max-width: 1269px;_width: 1269px;">
+		<li class="gallerybox" style="width: 415px"><div style="width: 415px">
+			<div class="thumb" style="width: 410px;"><div style="margin:15px auto;"><a href="/wiki/File:Change_color_table_interactively_with_menu_and_labels.png" class="image"><img alt="" src="/w/images/thumb/Change_color_table_interactively_with_menu_and_labels.png/312px-Change_color_table_interactively_with_menu_and_labels.png" width="312" height="190" srcset="/w/images/thumb/Change_color_table_interactively_with_menu_and_labels.png/467px-Change_color_table_interactively_with_menu_and_labels.png 1.5x, /w/images/thumb/Change_color_table_interactively_with_menu_and_labels.png/623px-Change_color_table_interactively_with_menu_and_labels.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Change color table for a raster map from layer context menu using <i>Set color table interactively</i>.
+</p>
+			</div>
+		</div></li>
+</ul></center>
+<pre>r.in.lidar -d input=nc_tile_0793_016_spm.las output=height_above_ground method=max base_raster=terrain zrange=0,100
+</pre>
+<p>In case we <code>if(height_above_ground &gt; 2, height_above_ground, null())</code>.
+</p>
+<pre>r.mapcalc "above_2m = if(height_above_ground &gt; 2, 1, null())"
+</pre>
+<p>Use <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.grow.html">r.grow</a></span> to extend the patches and fill in the holes:
+</p>
+<pre>r.grow input=above_2m output=vegetation_grow
+</pre>
+<p>We consider the result to represent the vegetated areas. We clump (connect) the individual cells into patches using <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.clump.html">r.clump</a></span>):
+</p>
+<pre>r.clump input=vegetation_grow output=vegetation_clump
+</pre>
+<p>Some of the patches are very small. Using <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass7/manuals/addons/r.area.html">r.area</a></span> we remove all patches smaller than the given threshold:
+</p>
+<pre>r.area input=vegetation_clump output=vegetation_by_height lesser=100
+</pre>
+<p>Now convert these areas to vector:
+</p>
+<pre>r.to.vect -s input=vegetation_by_height output=vegetation_by_height type=area
+</pre>
+<p>So far we were using elevation of the points, now we will use intensity.
+The intensity is used by <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.in.lidar.html">r.in.lidar</a></span> when <code>-j</code> (or <code>-i</code>) flag is provided:
+</p>
+<pre>r.in.lidar input=nc_tile_0793_016_spm.las output=intensity zrange=60,200 -j
+</pre>
+<p>With this high resolution, there are some cells without any points, so we use <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass7/manuals/addons/r.fill.gaps.html">r.fill.gaps</a></span> to fill these cells (<span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass7/manuals/addons/r.fill.gaps.html">r.fill.gaps</a></span> also smooths the raster as part of the gap-filling process). 
+</p>
+<pre>r.fill.gaps input=intensity output=intensity_filled uncertainty=uncertainty distance=3 mode=wmean power=2.0 cells=8
+</pre>
+<p>Grey scale color table is more appropriate for intensity:
+</p>
+<pre>r.colors map=intensity_filled color=grey
+</pre>
+<p>There are some areas with very high intensity, so to visually explore the other areas, we use histogram equalized color table:
+</p>
+<pre>r.colors -e map=intensity_filled color=grey
+</pre>
+<p>Let's use <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass7/manuals/addons/r.geomorphon.html">r.geomorphon</a></span> again, but now with DSM and different settings. The following settings shows building roof shapes:
+</p>
+<pre>r.geomorphon elevation=dsm forms=dsm_forms search=7 skip=4
+</pre>
+<p>Different settings, especially higher flatness threshold (<code>flat</code> parameter) shows forested areas as combination of footslopes, slopes, and shoulders. Individual trees are represented as shoulders.
+</p>
+<pre>r.geomorphon elevation=dsm forms=dsm_forms search=12 skip=8 flat=10 --o
+</pre>
+<p>Lowering the skip parameter decreases generalization and brings in summits which often represents tree tops:
+</p>
+<pre>r.geomorphon elevation=dsm forms=dsm_forms search=12 skip=2 flat=10 --o
+</pre>
+<p>Now we extract summits using <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.mapcalc.html">r.mapcalc</a></span> raster algebra expression <code>if(dsm_forms==2, 1, null())</code>.
+</p>
+<pre>r.mapcalc "trees = if(dsm_forms==2, 1, null())"
+</pre>
+<h2><span class="mw-headline" id="Bonus_tasks">Bonus tasks</span></h2>
+<h3><span class="mw-headline" id="3D_visualization_of_rasters">3D visualization of rasters</span></h3>
+<p>We can explore our study area in 3D view (use image on the right if clarification is needed for below steps):
+</p>
+<ol><li> Add raster <tt>dsm</tt> and uncheck or remove any other layers. Note that unchecking (or removing) any other layers is important because any layer loaded in <i>Layers</i> is interpreted as a surface in 3D view.</li>
+<li> Switch to 3D view (in the right corner of Map Display).</li>
+<li> Adjust the view (perspective, height).</li>
+<li> In <i>Data</i> tab, set <i>Fine mode resolution</i> to 1 and set <tt>ortho</tt> as the color of the surface (the orthophoto is draped over the DSM).</li>
+<li> Go back to <i>View</i> tab and explore the different view directions using the green puck.</li>
+<li> Go to <i>Appearance</i> tab and change the light conditions (lower the light height, change directions).</li>
+<li> Try also using the <tt>landforms</tt> raster as the color of the surface.</li>
+<li> When finished, switch back to 2D view.</li></ol>
+<center><ul class="gallery mw-gallery-traditional" style="max-width: 1269px;_width: 1269px;">
+		<li class="gallerybox" style="width: 415px"><div style="width: 415px">
+			<div class="thumb" style="width: 410px;"><div style="margin:15px auto;"><a href="/wiki/File:ICC_workshop_3Dview_ortho.png" class="image"><img alt="" src="/w/images/thumb/ICC_workshop_3Dview_ortho.png/327px-ICC_workshop_3Dview_ortho.png" width="327" height="190" srcset="/w/images/thumb/ICC_workshop_3Dview_ortho.png/491px-ICC_workshop_3Dview_ortho.png 1.5x, /w/images/thumb/ICC_workshop_3Dview_ortho.png/654px-ICC_workshop_3Dview_ortho.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>3D visualization of DSM with orthophoto draped over: arrows pointing to the name of the surface, resolution used for its display, and raster used as its color.
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 415px"><div style="width: 415px">
+			<div class="thumb" style="width: 410px;"><div style="margin:22.5px auto;"><a href="/wiki/File:Geomorphons_in_3D_view_Appearance_tab.png" class="image"><img alt="" src="/w/images/thumb/Geomorphons_in_3D_view_Appearance_tab.png/380px-Geomorphons_in_3D_view_Appearance_tab.png" width="380" height="175" srcset="/w/images/thumb/Geomorphons_in_3D_view_Appearance_tab.png/570px-Geomorphons_in_3D_view_Appearance_tab.png 1.5x, /w/images/thumb/Geomorphons_in_3D_view_Appearance_tab.png/760px-Geomorphons_in_3D_view_Appearance_tab.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Landforms over the DSM in 3D: The light source position is changed in the Appearance tab.
+</p>
+			</div>
+		</div></li>
+</ul></center>
+<h3><span class="mw-headline" id="Analytical_visualization_of_rasters_in_3D">Analytical visualization of rasters in 3D</span></h3>
+<p>We can explore our study area in 3D view (use image on the right if clarification is needed for below steps):
+</p>
+<ol><li> Add rasters <tt>terrain</tt> and  <tt>dsm</tt> and uncheck or remove any other layers. (Any layer in <i>Layers</i> will be interpreted as surface in 3D view.)</li>
+<li> Switch to 3D view (in the right corner of <i>Map Display</i>).</li>
+<li> Adjust the view (perspective, height). Set z-exaggeration to 1.</li>
+<li> In <i>Data</i> tab, in Surface, set <i>Fine mode resolution</i> to 1 for both rasters.</li>
+<li> Set a different color for each surface.</li>
+<li> For the <tt>dsm</tt>, set the position in Z direction to 1. This is a position relative the actual position of the raster. This small offset will help is see relation in between the terrain and the DSM surfaces.</li>
+<li> Go to <i>Analysis</i> tab and activate the first cutting plane. Set <i>Shading</i> to <i>bottom color</i> to get the bottom color to color the space between the terrain and DSM.</li>
+<li> Start sliding the sliders for <i>X</i>, <i>Y</i> and <i>Rotation</i>.</li>
+<li> Go back to <i>View</i> tab in case you want to change the view.</li>
+<li> When finished, switch back to 2D view.</li></ol>
+<center><ul class="gallery mw-gallery-traditional" style="max-width: 1269px;_width: 1269px;">
+		<li class="gallerybox" style="width: 415px"><div style="width: 415px">
+			<div class="thumb" style="width: 410px;"><div style="margin:15px auto;"><a href="/wiki/File:Nviz_data_tab_dsm_set_relative_positon.png" class="image"><img alt="" src="/w/images/thumb/Nviz_data_tab_dsm_set_relative_positon.png/146px-Nviz_data_tab_dsm_set_relative_positon.png" width="146" height="190" srcset="/w/images/thumb/Nviz_data_tab_dsm_set_relative_positon.png/219px-Nviz_data_tab_dsm_set_relative_positon.png 1.5x, /w/images/thumb/Nviz_data_tab_dsm_set_relative_positon.png/293px-Nviz_data_tab_dsm_set_relative_positon.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>In the Data tab of 3D view, set the same fine mode resolution for both surfaces. Choose different colors. Set (relative) position of the DSM to 1 m (above its actual position).
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 415px"><div style="width: 415px">
+			<div class="thumb" style="width: 410px;"><div style="margin:15px auto;"><a href="/wiki/File:Nviz_cutting_plane_analysis_tab.png" class="image"><img alt="" src="/w/images/thumb/Nviz_cutting_plane_analysis_tab.png/374px-Nviz_cutting_plane_analysis_tab.png" width="374" height="190" srcset="/w/images/thumb/Nviz_cutting_plane_analysis_tab.png/561px-Nviz_cutting_plane_analysis_tab.png 1.5x, /w/images/thumb/Nviz_cutting_plane_analysis_tab.png/748px-Nviz_cutting_plane_analysis_tab.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>In the Analysis tab of 3D view, activate cutting plane, set shading to bottom color and start sliding the sliders for X, Y and rotation.
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 415px"><div style="width: 415px">
+			<div class="thumb" style="width: 410px;"><div style="margin:21.5px auto;"><a href="/wiki/File:Nviz_cutting_plane_dem_dsm.png" class="image"><img alt="" src="/w/images/thumb/Nviz_cutting_plane_dem_dsm.png/380px-Nviz_cutting_plane_dem_dsm.png" width="380" height="177" srcset="/w/images/thumb/Nviz_cutting_plane_dem_dsm.png/570px-Nviz_cutting_plane_dem_dsm.png 1.5x, /w/images/thumb/Nviz_cutting_plane_dem_dsm.png/760px-Nviz_cutting_plane_dem_dsm.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>To see longer part of the transect, stretch the window horizontally.
+</p>
+			</div>
+		</div></li>
+</ul></center>
+<h3><span class="mw-headline" id="Classify_ground_and_non-ground_points">Classify ground and non-ground points</span></h3>
+<p>UAV point clouds usually require classification of ground points (bare earth) when we want to create ground surface.
+</p><p>Import all the points using the <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.in.lidar.html">v.in.lidar</a></span> command in the previous section, unless you already have them. Since the metadata about projection are wrong, we use the <code>-o</code> flag to skip the projection consistency check.
+</p>
+<pre>r.in.lidar -e -n -o input=nc_uav_points_spm.las output=uav_density_05 method=n resolution=0.5
+</pre>
+<p>Set a small computational region to make all the computations faster (skip this to operate in the whole area):
+</p>
+<pre>g.region  n=219415 s=219370 w=636981 e=637039
+</pre>
+<p>Import the points using the <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.in.lidar.html">v.in.lidar</a></span> module but limit the extent just to computational region (<code>-r</code> flag), do not build topology (<code>-b</code> flag), do not create attribute table (<code>-t</code> flag), and do not assign categories (ids) to points (<code>-c</code> flag). There is more points than we need for interpolating the the resolution 0.5 m, so we will decimate (thin) the point cloud during import removing 75% of the points using <code>preserve=4</code> (which uses count-based decimation which assumes spatially uniform distribution of the points).
+</p>
+<pre>v.in.lidar -t -c -b -r -o input=nc_uav_points_spm.las output=uav_points preserve=4
+</pre>
+<p>Then use <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass7/manuals/addons/v.lidar.mcc.html">v.lidar.mcc</a></span> to classify ground and non-ground points:
+</p>
+<pre>v.lidar.mcc input=points_all ground=mcc_ground nonground=mcc_nonground
+</pre>
+<p>Interpolate the ground surface:
+</p>
+<pre>v.surf.rst input=mcc_ground tension=20 smooth=5 npmin=100 elevation=mcc_ground
+</pre>
+<p>If you are using the UAV data, you can extract the RGB values from the points. First, import the points again, but this time with all the attributes:
+</p>
+<pre>v.in.lidar -r -o input=nc_uav_points_spm.las output=uav_points preserve=4
+</pre>
+<p>Then extract the RGB values (stored in attribute columns) into separate channels (rasters):
+</p>
+<pre>v.to.rast input=uav_points output=red use=attr attr_col=red
+v.to.rast input=uav_points output=green use=attr attr_col=green
+v.to.rast input=uav_points output=blue use=attr attr_col=blue
+</pre>
+<p>And then set the color table to grey:
+</p>
+<pre>r.colors red color=grey
+r.colors green color=grey
+r.colors blue color=grey
+</pre>
+<p>These channels could be used for some remote sensing tasks. Now we will just visualize them using <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/d.rgb.html">d.rgb</a></span>:
+</p>
+<pre>d.rgb red=red green=green blue=blue
+</pre>
+<p>If you are using the lidar data for this part, you can compare the new DEM with the previous dataset:
+</p>
+<pre>r.mapcalc "mcc_lidar_differece = ground - mcc_ground"
+</pre>
+<p>Set the color table:
+</p>
+<pre>r.colors map=mcc_lidar_differece color=difference
+</pre>
+<h3><span class="mw-headline" id="3D_visualization_of_point_clouds">3D visualization of point clouds</span></h3>
+<p>Unless you have already done that, familiarize yourself with the 3D view by doing the exercise above. Then import all points but this time do not add them to the <i>Layer Manager</i> (there is a check box at the bottom of the module dialog).
+</p>
+<pre>v.in.lidar -obt input=nc_tile_0793_016_spm.las output=points_all zrange=60,200
+</pre>
+<p>Now we can explore point clouds in 3D view:
+</p>
+<ol><li> Uncheck or remove any other layers. (Any layer in Layer Manager is interpreted as surface in 3D view.)</li>
+<li> Switch to 3D view (in the right corner of Map Display).</li>
+<li> When 3D is active, <i>Layer Manager</i> has a new icon for default settings of the 3D which we need to open and change.</li>
+<li> In the settings, change settings for default point shape from sphere to X.</li>
+<li> Then add the <tt>points</tt> vector.</li>
+<li> You may need to adjust the size of the points if they are all merged together.</li>
+<li> Adjust the view (perspective, height).</li>
+<li> Go back to <i>View</i> tab and explore the different view directions using the green puck.</li>
+<li> Go to <i>Appearance</i> tab and change the light conditions (lower the light height, change directions).</li>
+<li> When finished, switch back to 2D view.</li></ol>
+<center><ul class="gallery mw-gallery-traditional" style="max-width: 1269px;_width: 1269px;">
+		<li class="gallerybox" style="width: 415px"><div style="width: 415px">
+			<div class="thumb" style="width: 410px;"><div style="margin:15.5px auto;"><a href="/wiki/File:WxGUI_nviz_with_point_cloud_ground_and_non-ground_data_tab.png" class="image"><img alt="" src="/w/images/thumb/WxGUI_nviz_with_point_cloud_ground_and_non-ground_data_tab.png/380px-WxGUI_nviz_with_point_cloud_ground_and_non-ground_data_tab.png" width="380" height="189" srcset="/w/images/thumb/WxGUI_nviz_with_point_cloud_ground_and_non-ground_data_tab.png/570px-WxGUI_nviz_with_point_cloud_ground_and_non-ground_data_tab.png 1.5x, /w/images/thumb/WxGUI_nviz_with_point_cloud_ground_and_non-ground_data_tab.png/760px-WxGUI_nviz_with_point_cloud_ground_and_non-ground_data_tab.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>UAV point cloud classified to group points (orange) and non-ground points cloud (green).
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 415px"><div style="width: 415px">
+			<div class="thumb" style="width: 410px;"><div style="margin:15.5px auto;"><a href="/wiki/File:Selection_409.png" class="image"><img alt="" src="/w/images/thumb/Selection_409.png/380px-Selection_409.png" width="380" height="189" srcset="/w/images/thumb/Selection_409.png/570px-Selection_409.png 1.5x, /w/images/thumb/Selection_409.png/760px-Selection_409.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Detail showing trees and outliers.
+</p>
+			</div>
+		</div></li>
+</ul></center>
+<h3><span class="mw-headline" id="Alternative_DSM_creation">Alternative DSM creation</span></h3>
+<p>First returns not always represent top of the canopy, but they can simply represent first hit somewhere in the canopy. To account for this we create a raster with maximum for each cell instead of importing the raw points:
+</p>
+<pre>r.in.lidar input=nc_tile_0793_016_spm.las output=maximum method=maximum return_filter=first
+</pre>
+<p>The raster has many missing cells, that's why we want to interpolate, but at the same time, we also reduced the number of points by replacing all points in one cells just by this one cell. We can consider the cell to represent one point in the middle of the cell and use <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.to.vect.html">r.to.vect</a></span> to create points from these cells:
+</p>
+<pre>r.to.vect input=maximum output=points_for_dsm type=point -b
+</pre>
+<p>Now we have a decimated (thinned) point cloud, decimated using binning into raster. We interpolate these points to get the DSM:
+</p>
+<pre>v.surf.rst input=first_returns elevation=dsm tension=25 smooth=1 npmin=80
+</pre>
+<h3><span class="mw-headline" id="Explore_layers_of_vegetation_in_a_3D_raster">Explore layers of vegetation in a 3D raster</span></h3>
+<p>Set the top and bottom of the computational region to match the height of vegetation (we are interested in vegetation from 0 m to 30 m above ground).
+</p>
+<pre>g.region -p3 b=0 t=30
+</pre>
+<p>Similarly to 2D, we can perform the binning also in three dimensions using 3D rasters. This is implemented in a module called <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r3.in.lidar.html">r3.in.lidar</a></span>:
+</p>
+<pre>r3.in.lidar -d input=nc_tile_0793_016_spm.las n=count sum=intensity_sum mean=intensity proportional_n=prop_count proportional_sum=prop_intensity base_raster=terrain
+</pre>
+<p>Convert the horizontal layers (slices) of 3D raster into 2D rasters:
+</p>
+<pre>r3.to.rast input=prop_count output=slices_prop_count
+</pre>
+<p>Open a second <i>Map Display</i> and add all the created rasters. Then set the a consistent color table to all of them.
+</p>
+<pre>r.colors slices_prop_count_001,slices_prop_count_002,... color=viridis
+</pre>
+<p>Now open the Animation Tool and add all to 2D rasters there and use slider to explore the layers.
+</p>
+<h2><span class="mw-headline" id="Optimizations.2C_troubleshooting_and_limitations">Optimizations, troubleshooting and limitations</span></h2>
+<p>Speed optimizations:
+</p>
+<ul><li> <i>Rasterize early.</i>
+<ul><li> For many use cases, there is less cells than points. Additionally, rasters will be faster, e.g. for visualization, because raster has a natural spatial index. Finally, many algorithms simply use rasters anyway.</li></ul></li>
+<li> If you cannot rasterize, see if you can decimate (thin) the point cloud (using <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.in.lidar.html">v.in.lidar</a></span>, <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.in.lidar.html">r.in.lidar</a></span> + <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.to.vect.html">r.to.vect</a></span>, <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.decimate.html">v.decimate</a></span>).</li>
+<li> Binning (e.g. <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.in.lidar.html">r.in.lidar</a></span>, <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r3.in.lidar.html">r3.in.lidar</a></span>) is much faster than interpolation and can carry out part of the analysis.</li>
+<li> Faster count-based decimation performs often the same on a given point cloud for terrain as slower grid-based decimation (Petras et al. 2016).</li>
+<li> r.in.lidar
+<ul><li> choose computation region extent and resolution ahead</li>
+<li> have enough memory to avoid using <tt>percent</tt> option (high memory usage versus high I/O)</li></ul></li>
+<li>v.in.lidar
+<ul><li> <tt>-r</tt> limit import to computation region extent</li>
+<li> <tt>-t</tt> do not create attribute table</li>
+<li> <tt>-b</tt> do not build topology (applicable to other modules as well)</li>
+<li> <tt>-c</tt> store only coordinates, no categories or IDs</li></ul></li></ul>
+<p>Memory requirements:
+</p>
+<ul><li> for r.in.lidar
+<ul><li> depend on the side of output and type of analysis</li>
+<li> can be reduced by <tt>percent</tt> option</li>
+<li> <tt>ERROR: G_malloc: unable to allocate ... bytes of memory</tt> means that there is not enough memory for the output raster, use <tt>percent</tt> option, coarser resolution, or smaller extent</li>
+<li> on Linux available memory for process is RAM + SWAP partition, but when SWAP will be used, processing will be much slower</li></ul></li>
+<li> for v.in.lidar
+<ul><li> low when not building topology (<tt>-b</tt> flag)</li>
+<li> to build topology but keeping low memory, use <tt>export GRASS_VECTOR_LOWMEM=1</tt> (<tt>os.environ['GRASS_VECTOR_LOWMEM'] = '1'</tt> in Python)</li></ul></li></ul>
+<p>Limits:
+</p>
+<ul><li> Vector features with topology are limited to about 2 billion features per vector map (2^31 - 1)</li>
+<li> Points without topology are limited only by disk space and what the modules are able to process later. (Theoretically, the count limited only by the 64bit architecture which would be 16 exbibytes per file, but the actual value depends on the file system.)</li>
+<li> For large vectors with attributes, PostgreSQL backend is recommended for attributes (<span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.db.connect.html">v.db.connect</a></span>).</li>
+<li> There is more limits for the 32bit versions for operations which require memory. (Since 2016 there is 64bit version even for MS Windows. Even the 32bit versions have large file support (LFS) and can work with files exceeding the 32bit limitations.)</li>
+<li> Reading and writing to disk (I/O) usually limits speed. (Can be made faster for rasters since 7.2 using different compression algorithms set using the <tt>GRASS_COMPRESSOR</tt> variable.)</li>
+<li> There is limit for number of open files set by the operating system.
+<ul><li> The limit is often 1024. On Linux, it can be changed using <i>ulimit</i>.</li></ul></li>
+<li> Individual modules may have their own limitations or behaviors with large data based on the algorithm they are using. However, in general modules are made to deal with large datasets. For example,
+<ul><li> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/r.watershed.html">r.watershed</a></span> can process 90,000 x 100,000 (9 billion cells) in 77.2 hours (2.93GHz), and</li>
+<li> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass72/manuals/v.surf.rst.html">v.surf.rst</a></span> can process 1 million points and interpolate 202,000 cells in 13 minutes.</li></ul></li>
+<li> Read the documentation as it provides descriptions of limitations for each module and ways to deal with them.</li>
+<li> Write to <a rel="nofollow" class="external text" href="https://lists.osgeo.org/listinfo/grass-user">grass-user mailing list</a> or <a rel="nofollow" class="external text" href="http://trac.osgeo.org/grass/">GRASS GIS bug tracker</a> in case you hit limits. For example, if you get negative number as the number of points or cells, open a ticket.</li></ul>
+<h2><span class="mw-headline" id="Bleeding_edge">Bleeding edge</span></h2>
+<div class="thumb tright"><div class="thumbinner" style="width:302px;"><a href="/wiki/File:Raster3d_example_small_data.png" class="image"><img alt="" src="/w/images/thumb/Raster3d_example_small_data.png/300px-Raster3d_example_small_data.png" width="300" height="333" class="thumbimage" srcset="/w/images/thumb/Raster3d_example_small_data.png/450px-Raster3d_example_small_data.png 1.5x, /w/images/thumb/Raster3d_example_small_data.png/600px-Raster3d_example_small_data.png 2x" /></a>  <div class="thumbcaption"><div class="magnify"><a href="/wiki/File:Raster3d_example_small_data.png" class="internal" title="Enlarge"></a></div>Vegetation fragmentation computed by <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass7/manuals/addons/r3.forestfrag.html">r3.forestfrag</a></span> from lidar point cloud represented as 3D raster</div></div></div>
+<ul><li> Processing point clouds as 3D rasters
+<ul><li> r3.forestfrag</li>
+<li> r3.count.categories</li>
+<li> r3.scatterplot</li></ul></li>
+<li> Point profiles
+<ul><li> v.profile.points</li></ul></li>
+<li> PDAL integration
+<ul><li> prototypes: v.in.pdal, r.in.pdal</li>
+<li> goal: provide access to selected PDAL algorithms (filters)</li></ul></li>
+<li> r.in.kinect
+<ul><li> Has some features from r.in.lidar, v.in.lidar, and PCL (Point Cloud Library), but the point cloud is continuously updated from a Kinect scanner using OpenKinect libfreenect2 (used in <a rel="nofollow" class="external text" href="http://tangible-landscape.github.io/">Tangible Landscape</a>).</li></ul></li>
+<li> Combining elevation data from different sources (e.g. global and lidar DEM or lidar and UAV DEM)
+<ul><li> <a rel="nofollow" class="external text" href="https://github.com/petrasovaa/r.patch.smooth">r.patch.smooth</a>: Seamless fusion of high-resolution DEMs from two different sources</li>
+<li> <span class="plainlinks"><a rel="nofollow" class="external text" href="https://grass.osgeo.org/grass7/manuals/addons/r.mblend.html">r.mblend</a></span>: Blending rasters of different spatial resolution</li></ul></li>
+<li> show large point clouds in Map Display (2D)
+<ul><li> prototype: d.points</li></ul></li>
+<li> Store return and class information as category
+<ul><li> experimental implementation in v.in.lidar</li></ul></li>
+<li> Decimations
+<ul><li> implemented: v.in.lidar, r.in.lidar</li>
+<li> v.decimate (with experimental features)</li></ul></li></ul>
+<p>Contributions are certainly welcome. You can discuss them at the <a rel="nofollow" class="external text" href="https://lists.osgeo.org/listinfo/grass-dev">grass-dev mailing list</a>.
+</p>
+<center><ul class="gallery mw-gallery-traditional" style="max-width: 1329px;_width: 1329px;">
+		<li class="gallerybox" style="width: 435px"><div style="width: 435px">
+			<div class="thumb" style="width: 430px;"><div style="margin:15px auto;"><a href="/wiki/File:Tangible_landscape_and_blender_with_water_and_trees.jpg" class="image"><img alt="" src="/w/images/thumb/Tangible_landscape_and_blender_with_water_and_trees.jpg/347px-Tangible_landscape_and_blender_with_water_and_trees.jpg" width="347" height="270" srcset="/w/images/thumb/Tangible_landscape_and_blender_with_water_and_trees.jpg/520px-Tangible_landscape_and_blender_with_water_and_trees.jpg 1.5x, /w/images/thumb/Tangible_landscape_and_blender_with_water_and_trees.jpg/694px-Tangible_landscape_and_blender_with_water_and_trees.jpg 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Tangible Landscape uses r.in.kinect to scan a sand model which is processed and analyzed in GRASS GIS and optionally visualized in Blender
+</p>
+			</div>
+		</div></li>
+		<li class="gallerybox" style="width: 435px"><div style="width: 435px">
+			<div class="thumb" style="width: 430px;"><div style="margin:15px auto;"><a href="/wiki/File:Seamless_fusion_of_high-resolution_DEMs_from_multiple_sources.png" class="image"><img alt="" src="/w/images/thumb/Seamless_fusion_of_high-resolution_DEMs_from_multiple_sources.png/397px-Seamless_fusion_of_high-resolution_DEMs_from_multiple_sources.png" width="397" height="270" srcset="/w/images/thumb/Seamless_fusion_of_high-resolution_DEMs_from_multiple_sources.png/595px-Seamless_fusion_of_high-resolution_DEMs_from_multiple_sources.png 1.5x, /w/images/thumb/Seamless_fusion_of_high-resolution_DEMs_from_multiple_sources.png/794px-Seamless_fusion_of_high-resolution_DEMs_from_multiple_sources.png 2x" /></a></div></div>
+			<div class="gallerytext">
+<p>Seamless fusion of high-resolution DEMs from multiple sources with r.patch.smooth: example of computing overlap zone for fusion
+</p>
+			</div>
+		</div></li>
+</ul></center>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li> <a href="/wiki/GRASS_GIS_at_FOSS4G_Boston_2017" title="GRASS GIS at FOSS4G Boston 2017">GRASS GIS at FOSS4G Boston 2017</a></li>
+<li> <a href="/wiki/From_GRASS_GIS_novice_to_power_user_(workshop_at_FOSS4G_Boston_2017)" title="From GRASS GIS novice to power user (workshop at FOSS4G Boston 2017)">From GRASS GIS novice to power user (workshop at FOSS4G Boston 2017)</a></li>
+<li> <a href="/wiki/Analytical_data_visualizations_at_ICC_2017" title="Analytical data visualizations at ICC 2017">Analytical data visualizations at ICC 2017</a></li>
+<li> <a href="/wiki/Unleash_the_power_of_GRASS_GIS_at_US-IALE_2017" title="Unleash the power of GRASS GIS at US-IALE 2017">Unleash the power of GRASS GIS at US-IALE 2017</a></li>
+<li> <a href="/wiki/Creating_animation_from_FUTURES_output_in_GRASS_GIS" title="Creating animation from FUTURES output in GRASS GIS">Creating animation from FUTURES output in GRASS GIS</a></li>
+<li> <a href="/wiki/Introduction_to_GRASS_GIS_with_terrain_analysis_examples" title="Introduction to GRASS GIS with terrain analysis examples">Introduction to GRASS GIS with terrain analysis examples</a></li>
+<li> <a href="/wiki/Lidar_Analysis_of_Vegetation_Structure" title="Lidar Analysis of Vegetation Structure">Lidar Analysis of Vegetation Structure</a></li>
+<li> <a href="/wiki/LIDAR" title="LIDAR">LIDAR</a></li>
+<li> <a href="/wiki/GRASS_and_Python" title="GRASS and Python">GRASS GIS and Python</a></li>
+<li> <a href="/wiki/R_statistics" title="R statistics">GRASS GIS and R</a></li>
+<li> <a href="/wiki/GRASS_Location_Wizard" title="GRASS Location Wizard">GRASS Location Wizard</a></li></ul>
+<p>External links:
+</p>
+<ul><li> <a rel="nofollow" class="external text" href="http://wenzeslaus.github.io/grass-lidar-talks/">Processing lidar and general point cloud data in GRASS GIS</a> (presentation slides)</li>
+<li> <a rel="nofollow" class="external text" href="https://petrasovaa.github.io/dem-fusion-talk">Seamless fusion of high-resolution DEMs from multiple sources</a> (presentation slides)</li>
+<li> <a rel="nofollow" class="external text" href="https://www.liblas.org">libLAS</a></li>
+<li> <a rel="nofollow" class="external text" href="http://pdal.io/">PDAL</a></li></ul>
+<p>References:
+</p>
+<ul><li> Brovelli M. A., Cannata M., Longoni U.M. 2004. <i>LIDAR Data Filtering and DTM Interpolation Within GRASS.</i> Transactions in GIS, April 2004, vol. 8, iss. 2, pp. 155-174(20), Blackwell Publishing Ltd. (<a rel="nofollow" class="external text" href="https://www.researchgate.net/publication/220606097_LiDAR_data_filtering_and_DTM_interpolation_within_GRASS">full text at ResearchGate</a>)</li>
+<li> Evans, J. S., Hudak, A. T. 2007. <i>A Multiscale Curvature Algorithm for Classifying Discrete Return LiDAR in Forested Environments.</i> IEEE Transactions on Geoscience and Remote Sensing 45(4): 1029 - 1038. (<a rel="nofollow" class="external text" href="http://www.fs.fed.us/rm/pubs_other/rmrs_2007_evans_j001.pdf">full text</a>)</li>
+<li> Jasiewicz, J., Stepinski, T. 2013. <i>Geomorphons - a pattern recognition approach to classification and mapping of landforms, Geomorphology.</i> vol. 182, 147-156. <a rel="nofollow" class="external text" href="http://dx.doi.org/10.1016/j.geomorph.2012.11.005">DOI: 10.1016/j.geomorph.2012.11.005</a></li>
+<li> Leitão, J.P., Prodanovic,  D., Maksimovic, C. 2016. <i>Improving merge methods for grid-based digital elevation models.</i> Computers &amp; Geosciences, Volume 88, March 2016, Pages 115-131, ISSN 0098-3004. <a rel="nofollow" class="external text" href="http://doi.org/10.1016/j.cageo.2016.01.001">DOI: 10.1016/j.cageo.2016.01.001</a>. </li>
+<li> Mitasova, H., Mitas, L. and Harmon, R.S., 2005, Simultaneous spline approximation and topographic analysis for lidar elevation data in open source GIS, IEEE GRSL 2 (4), 375- 379. (<a rel="nofollow" class="external text" href="http://www4.ncsu.edu/~hmitaso/gmslab/papers/IEEEGRSL2005.pdf">full text</a>)</li>
+<li> Petras, V., Newcomb, D. J., Mitasova, H. 2017. <i>Generalized 3D fragmentation index derived from lidar point clouds.</i> In: Open Geospatial Data, Software and Standards. <a rel="nofollow" class="external text" href="http://dx.doi.org/10.1186/s40965-017-0021-8">DOI: 10.1186/s40965-017-0021-8</a></li>
+<li> Petras, V., Petrasova, A., Jeziorska, J., Mitasova, H. 2016. <i>Processing UAV and lidar point clouds in GRASS GIS.</i> ISPRS - International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences XLI-B7, 945–952, 2016 (<a rel="nofollow" class="external text" href="https://www.researchgate.net/publication/304340172_Processing_UAV_and_lidar_point_clouds_in_GRASS_GIS">full text at ResearchGate</a>)</li>
+<li> Petrasova, A., Mitasova, H., Petras, V., Jeziorska, J. 2017. <i>Fusion of high-resolution DEMs for water flow modeling.</i> In: Open Geospatial Data, Software and Standards. <a rel="nofollow" class="external text" href="http://dx.doi.org/10.1186/s40965-017-0019-2">DOI: 10.1186/s40965-017-0019-2</a></li></ul>
+
+<!-- 
+NewPP limit report
+Cached time: 20170811171759
+Cache expiry: 86400
+Dynamic content: false
+CPU time usage: 0.408 seconds
+Real time usage: 1.445 seconds
+Preprocessor visited node count: 1363/1000000
+Preprocessor generated node count: 0/1000000
+Post‐expand include size: 11075/2097152 bytes
+Template argument size: 2326/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+-->
+
+<!-- 
+Transclusion expansion time report (%,ms,calls,template)
+100.00% 1280.396      1 - -total
+  1.98%   25.348     86 - Template:Cmd
+  0.48%    6.088      7 - Template:Pyapi
+  0.36%    4.637     14 - Template:AddonCmd
+-->
+
+<!-- Saved in parser cache with key grass_wiki:pcache:idhash:4332-0!*!0!!en!5!* and timestamp 20170811171758 and revision id 24707
+ -->
+</div>					<div class="printfooter">
+						Retrieved from "<a dir="ltr" href="https://grasswiki.osgeo.org/w/index.php?title=Processing_lidar_and_UAV_point_clouds_in_GRASS_GIS_(workshop_at_FOSS4G_Boston_2017)&amp;oldid=24707">https://grasswiki.osgeo.org/w/index.php?title=Processing_lidar_and_UAV_point_clouds_in_GRASS_GIS_(workshop_at_FOSS4G_Boston_2017)&amp;oldid=24707</a>"					</div>
+				<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a href="/wiki/Special:Categories" title="Special:Categories">Categories</a>: <ul><li><a href="/wiki/Category:Tutorial" title="Category:Tutorial">Tutorial</a></li><li><a href="/wiki/Category:Workshops" title="Category:Workshops">Workshops</a></li><li><a href="/wiki/Category:2017" title="Category:2017">2017</a></li><li><a href="/w/index.php?title=Category:Lidar&amp;action=edit&amp;redlink=1" class="new" title="Category:Lidar (page does not exist)">Lidar</a></li><li><a href="/w/index.php?title=Category:Terrain&amp;action=edit&amp;redlink=1" class="new" title="Category:Terrain (page does not exist)">Terrain</a></li><li><a href="/w/index.php?title=Category:Vegetation&amp;action=edit&amp;redlink=1" class="new" title="Category:Vegetation (page does not exist)">Vegetation</a></li></ul></div></div>				<div class="visualClear"></div>
+							</div>
+		</div>
+		<div id="mw-navigation">
+			<h2>Navigation menu</h2>
+
+			<div id="mw-head">
+									<div id="p-personal" role="navigation" class="" aria-labelledby="p-personal-label">
+						<h3 id="p-personal-label">Personal tools</h3>
+						<ul>
+							<li id="pt-login"><a href="/w/index.php?title=Special:UserLogin&amp;returnto=Processing+lidar+and+UAV+point+clouds+in+GRASS+GIS+%28workshop+at+FOSS4G+Boston+2017%29" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li><li id="pt-createaccount"><a href="/wiki/Special:RequestAccount" title="You are encouraged to create an account and log in; however, it is not mandatory">Request account</a></li>						</ul>
+					</div>
+									<div id="left-navigation">
+										<div id="p-namespaces" role="navigation" class="vectorTabs" aria-labelledby="p-namespaces-label">
+						<h3 id="p-namespaces-label">Namespaces</h3>
+						<ul>
+															<li  id="ca-nstab-main" class="selected"><span><a href="/wiki/Processing_lidar_and_UAV_point_clouds_in_GRASS_GIS_(workshop_at_FOSS4G_Boston_2017)"  title="View the content page [c]" accesskey="c">Page</a></span></li>
+															<li  id="ca-talk" class="new"><span><a href="/w/index.php?title=Talk:Processing_lidar_and_UAV_point_clouds_in_GRASS_GIS_(workshop_at_FOSS4G_Boston_2017)&amp;action=edit&amp;redlink=1"  title="Discussion about the content page [t]" accesskey="t" rel="discussion">Discussion</a></span></li>
+													</ul>
+					</div>
+										<div id="p-variants" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-variants-label">
+												<h3 id="p-variants-label">
+							<span>Variants</span><a href="#"></a>
+						</h3>
+
+						<div class="menu">
+							<ul>
+															</ul>
+						</div>
+					</div>
+									</div>
+				<div id="right-navigation">
+										<div id="p-views" role="navigation" class="vectorTabs" aria-labelledby="p-views-label">
+						<h3 id="p-views-label">Views</h3>
+						<ul>
+															<li id="ca-view" class="selected"><span><a href="/wiki/Processing_lidar_and_UAV_point_clouds_in_GRASS_GIS_(workshop_at_FOSS4G_Boston_2017)" >Read</a></span></li>
+															<li id="ca-viewsource"><span><a href="/w/index.php?title=Processing_lidar_and_UAV_point_clouds_in_GRASS_GIS_(workshop_at_FOSS4G_Boston_2017)&amp;action=edit"  title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></span></li>
+															<li id="ca-history" class="collapsible"><span><a href="/w/index.php?title=Processing_lidar_and_UAV_point_clouds_in_GRASS_GIS_(workshop_at_FOSS4G_Boston_2017)&amp;action=history"  title="Past revisions of this page [h]" accesskey="h">View history</a></span></li>
+													</ul>
+					</div>
+										<div id="p-cactions" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-cactions-label">
+						<h3 id="p-cactions-label"><span>More</span><a href="#"></a></h3>
+
+						<div class="menu">
+							<ul>
+															</ul>
+						</div>
+					</div>
+										<div id="p-search" role="search">
+						<h3>
+							<label for="searchInput">Search</label>
+						</h3>
+
+						<form action="/w/index.php" id="searchform">
+							<div id="simpleSearch">
+							<input type="search" name="search" placeholder="Search" title="Search GRASS-Wiki [f]" accesskey="f" id="searchInput"/><input type="hidden" value="Special:Search" name="title"/><input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/><input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>							</div>
+						</form>
+					</div>
+									</div>
+			</div>
+			<div id="mw-panel">
+				<div id="p-logo" role="banner"><a class="mw-wiki-logo" href="/wiki/Main_Page"  title="Visit the main page"></a></div>
+						<div class="portal" role="navigation" id='p-navigation' aria-labelledby='p-navigation-label'>
+			<h3 id='p-navigation-label'>Navigation</h3>
+
+			<div class="body">
+									<ul>
+						<li id="n-mainpage"><a href="/wiki/GRASS-Wiki" title="Visit the main page [z]" accesskey="z">Main Page</a></li><li id="n-Community"><a href="/wiki/GRASS_Community">Community</a></li><li id="n-Development"><a href="/wiki/Development">Development</a></li><li id="n-Documents"><a href="/wiki/Documents">Documents</a></li><li id="n-GRASS-Help"><a href="/wiki/GRASS_Help">GRASS Help</a></li><li id="n-recentchanges"><a href="/wiki/Special:RecentChanges" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-help"><a href="/wiki/Help" title="The place to find out">Help</a></li>					</ul>
+							</div>
+		</div>
+			<div class="portal" role="navigation" id='p-tb' aria-labelledby='p-tb-label'>
+			<h3 id='p-tb-label'>Tools</h3>
+
+			<div class="body">
+									<ul>
+						<li id="t-whatlinkshere"><a href="/wiki/Special:WhatLinksHere/Processing_lidar_and_UAV_point_clouds_in_GRASS_GIS_(workshop_at_FOSS4G_Boston_2017)" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="/wiki/Special:RecentChangesLinked/Processing_lidar_and_UAV_point_clouds_in_GRASS_GIS_(workshop_at_FOSS4G_Boston_2017)" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="/wiki/Special:SpecialPages" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="/w/index.php?title=Processing_lidar_and_UAV_point_clouds_in_GRASS_GIS_(workshop_at_FOSS4G_Boston_2017)&amp;printable=yes" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="/w/index.php?title=Processing_lidar_and_UAV_point_clouds_in_GRASS_GIS_(workshop_at_FOSS4G_Boston_2017)&amp;oldid=24707" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="/w/index.php?title=Processing_lidar_and_UAV_point_clouds_in_GRASS_GIS_(workshop_at_FOSS4G_Boston_2017)&amp;action=info" title="More information about this page">Page information</a></li>					</ul>
+							</div>
+		</div>
+				</div>
+		</div>
+		<div id="footer" role="contentinfo">
+							<ul id="footer-info">
+											<li id="footer-info-lastmod"> This page was last modified on 11 August 2017, at 10:17.</li>
+											<li id="footer-info-viewcount">This page has been accessed 1,844 times.</li>
+											<li id="footer-info-copyright">Content is available under <a class="external" rel="nofollow" href="http://www.gnu.org/copyleft/fdl.html">GNU Free Documentation License 1.2</a> unless otherwise noted.</li>
+									</ul>
+							<ul id="footer-places">
+											<li id="footer-places-privacy"><a href="/wiki/GRASS-Wiki:Privacy_policy" title="GRASS-Wiki:Privacy policy">Privacy policy</a></li>
+											<li id="footer-places-about"><a href="/wiki/GRASS-Wiki:About" title="GRASS-Wiki:About">About GRASS-Wiki</a></li>
+											<li id="footer-places-disclaimer"><a href="/wiki/GRASS-Wiki:General_disclaimer" title="GRASS-Wiki:General disclaimer">Disclaimers</a></li>
+									</ul>
+										<ul id="footer-icons" class="noprint">
+											<li id="footer-copyrightico">
+							<a href="http://www.gnu.org/copyleft/fdl.html"><img src="/w/resources/assets/licenses/gnu-fdl.png" alt="GNU Free Documentation License 1.2" width="88" height="31"/></a>						</li>
+											<li id="footer-poweredbyico">
+							<a href="//www.mediawiki.org/"><img src="/w/resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/w/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /w/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31"/></a>						</li>
+									</ul>
+						<div style="clear:both"></div>
+		</div>
+		<script>(window.RLQ=window.RLQ||[]).push(function(){mw.loader.state({"user":"ready","user.groups":"ready"});mw.loader.load(["mediawiki.toc","mediawiki.action.view.postEdit","site","mediawiki.user","mediawiki.hidpi","mediawiki.page.ready","mediawiki.searchSuggest"]);});</script><script>(window.RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgBackendResponseTime":124});});</script>
+	</body>
+</html>
