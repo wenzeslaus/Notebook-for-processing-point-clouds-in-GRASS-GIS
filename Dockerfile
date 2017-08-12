@@ -38,6 +38,9 @@ RUN apt-get update \
         libsqlite3-dev \
         libtiff-dev \
         libxmu-dev \
+        libboost-program-options-dev \
+        libboost-thread-dev \
+        libgeotiff-dev \
         make \
         netcdf-bin \
         proj-bin \
@@ -62,6 +65,9 @@ RUN apt-get update \
     && apt-get autoremove \
     && apt-get clean
 
+# libLAS probably reports wrong location of libgeotiff
+RUN ln -s /usr/lib/x86_64-linux-gnu/libgeotiff.so /usr/lib/
+
 # GRASS GIS needs to be build with Python 2
 RUN ln -s /usr/bin/python2 /bin/python
 
@@ -83,7 +89,7 @@ RUN source activate python2 \
         --with-opengl-libs=/usr/include/GL \
         --with-freetype=yes --with-freetype-includes="/usr/include/freetype2/" \
         --with-sqlite=yes \
-        #--with-liblas=yes --with-liblas-config=/usr/bin/liblas-config \
+        --with-liblas=/usr/bin/liblas-config \
     && make ; make install ; ldconfig
 # make gives errors which are not that important now, so we ignore them
 WORKDIR /usr/local
@@ -107,22 +113,37 @@ WORKDIR /home/$NB_USER
 
 RUN mkdir -p /home/$NB_USER/grassdata
 
-RUN curl -SL http://fatra.cnr.ncsu.edu/foss4g2017/nc_orthophoto_1m_spm.zip \
+RUN curl -SL http://fatra.cnr.ncsu.edu/foss4g2017/nc_orthophoto_1m_spm.zip > nc_orthophoto_1m_spm.zip\
   && unzip nc_orthophoto_1m_spm.zip \
   && mv nc_orthophoto_1m_spm.tif /home/$NB_USER/work \
   && rm nc_orthophoto_1m_spm.zip
 
-RUN curl -SL http://fatra.cnr.ncsu.edu/foss4g2017/nc_tile_0793_016_spm.zip \
+RUN curl -SL http://fatra.cnr.ncsu.edu/foss4g2017/nc_tile_0793_016_spm.zip > nc_tile_0793_016_spm.zip\
   && unzip nc_tile_0793_016_spm.zip \
-  && mv nc_tile_0793_016_spm.tif /home/$NB_USER/work \
+  && mv nc_tile_0793_016_spm.las /home/$NB_USER/work \
   && rm nc_tile_0793_016_spm.zip
 
-RUN curl -SL http://fatra.cnr.ncsu.edu/foss4g2017/nc_uav_points_spm.zip \
+RUN curl -SL http://fatra.cnr.ncsu.edu/foss4g2017/nc_uav_points_spm.zip > nc_uav_points_spm.zip \
   && unzip nc_uav_points_spm.zip \
-  && mv nc_uav_points_spm.tif /home/$NB_USER/work \
+  && mv nc_uav_points_spm.las /home/$NB_USER/work \
   && rm nc_uav_points_spm.zip
 
 WORKDIR /home/$NB_USER/work
+
+# there is some problem or bug with permissions
+USER root
+RUN chown -R $NB_USER:users /home/$NB_USER
+USER $NB_USER
+
+RUN source activate python2 && grass -c EPSG:4326 /home/$NB_USER/grassdata/latlon -e
+RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.geomorphon
+RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.skyview
+RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.local.relief
+RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.shaded.pca
+RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.area
+RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.terrain.texture
+RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.fill.gaps
+RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension v.lidar.mcc
 
 COPY notebooks/* ./
 
@@ -131,16 +152,7 @@ USER root
 RUN chown -R $NB_USER:users /home/$NB_USER
 USER $NB_USER
 
-RUN grass -c EPSG:4326 /home/$NB_USER/grassdata/latlon
-RUN grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension
-RUN grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.geomorphon
-RUN grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.skyview
-RUN grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.local.relief
-RUN grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.shaded.pca
-RUN grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.area
-RUN grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.terrain.texture
-RUN grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.fill.gaps
-RUN grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension v.lidar.mcc
+RUN source activate python2 && grass -c EPSG:3358 /home/$NB_USER/grassdata/workshop -e
 
-# needed again, or enough for the root?
+# needed again, or enough for the root or is is actually a noop here?
 RUN source activate python2
