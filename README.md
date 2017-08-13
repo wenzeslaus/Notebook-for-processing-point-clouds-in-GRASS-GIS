@@ -48,3 +48,31 @@ Run it to test it:
 ```
 docker run -it --rm -p 8888:8888 grass-point-cloud-workshop
 ```
+
+## Run tmpnb
+
+Generate tokens:
+
+```
+export TOKEN=$( head -c 30 /dev/urandom | xxd -p )
+export USER_TOKEN=$( head -c 30 /dev/urandom | xxd -p )
+echo $TOKEN
+echo $USER_TOKEN
+```
+
+Run the proxy:
+
+```
+docker run --net=host -d -e CONFIGPROXY_AUTH_TOKEN=$TOKEN --name=proxy \
+    jupyter/configurable-http-proxy --default-target http://127.0.0.1:9999
+```
+
+Run tmpnb:
+
+```
+docker run --net=host -d -e CONFIGPROXY_AUTH_TOKEN=$TOKEN --name=tmpnb \
+    -v /var/run/docker.sock:/docker.sock jupyter/tmpnb \
+    python orchestrate.py --log-to-stderr --logging=debug \
+    --use-tokens=False --image='grass-gis-notebook' \
+    --command="start-notebook.sh \"--NotebookApp.base_url={base_path} --ip=0.0.0.0 --port {port} --NotebookApp.trust_xheaders=True --NotebookApp.token=$USER_TOKEN\""
+```
