@@ -28,7 +28,8 @@ with
 
 Conversion tool from https://github.com/wenzeslaus/gdoc2py:
 
-    ./gdoc2nb.py --gisdbase /grassdata/ --location nc_spm --mapset PER workshop.html notebooks/workshop_python.ipynb
+     ./gdoc2nb.py --gisdbase /home/jovyan/grassdata/ --location workshop --mapset PERMANENT --lang python workshop.html notebooks/workshop_python.ipynb
+     ./gdoc2nb.py --gisdbase /home/jovyan/grassdata/ --location workshop --mapset PERMANENT --lang bash workshop.html notebooks/workshop_bash.ipynb
 
 ## Simple test
 

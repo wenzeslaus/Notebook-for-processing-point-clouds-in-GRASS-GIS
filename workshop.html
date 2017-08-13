@@ -1073,8 +1073,8 @@ r.colors slices_prop_count_001,slices_prop_count_002,... color=viridis
 <li> <tt>ERROR: G_malloc: unable to allocate ... bytes of memory</tt> means that there is not enough memory for the output raster, use <tt>percent</tt> option, coarser resolution, or smaller extent</li>
 <li> on Linux available memory for process is RAM + SWAP partition, but when SWAP will be used, processing will be much slower</li></ul></li>
 <li> for v.in.lidar
-<ul><li> low when not building topology (<tt>-b&lt;</tt> flag)</li>
-<li> to build topology but keeping low memory, use &lt;tt&gt;export GRASS_VECTOR_LOWMEM=1</tt> (<tt>os.environ['GRASS_VECTOR_LOWMEM'] = '1'</tt> in Python)</li></ul></li></ul>
+<ul><li> low when not building topology (<tt>-b</tt> flag)</li>
+<li> to build topology but keeping low memory, use <tt>export GRASS_VECTOR_LOWMEM=1</tt> (<tt>os.environ['GRASS_VECTOR_LOWMEM'] = '1'</tt> in Python)</li></ul></li></ul>
 <p>Limits:
 </p>
 <ul><li> Vector features with topology are limited to about 2 billion features per vector map (2^31 - 1)</li>
