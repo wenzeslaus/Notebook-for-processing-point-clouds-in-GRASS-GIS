@@ -42,6 +42,15 @@ RUN ln -s /usr/lib/x86_64-linux-gnu/libgeotiff.so /usr/lib/
 
 USER $NB_USER
 
+RUN source activate python2 && grass -c EPSG:4326 /home/$NB_USER/grassdata/latlon -e
+RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.skyview
+RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.local.relief
+RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.shaded.pca
+RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.area
+RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.terrain.texture
+RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.fill.gaps
+RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension v.lidar.mcc
+
 WORKDIR /home/$NB_USER
 
 RUN mkdir -p /home/$NB_USER/grassdata
@@ -67,16 +76,6 @@ WORKDIR /home/$NB_USER/work
 USER root
 RUN chown -R $NB_USER:users /home/$NB_USER
 USER $NB_USER
-
-RUN source activate python2 && grass -c EPSG:4326 /home/$NB_USER/grassdata/latlon -e
-RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.geomorphon
-RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.skyview
-RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.local.relief
-RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.shaded.pca
-RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.area
-RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.terrain.texture
-RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension r.fill.gaps
-RUN source activate python2 && grass /home/$NB_USER/grassdata/latlon/PERMANENT --exec g.extension v.lidar.mcc
 
 COPY notebooks/* ./
 
